@@ -1,3 +1,5 @@
+/* eslint-disable react/no-children-prop */
+
 /**
  * 异步加载页面
  */
@@ -7,6 +9,8 @@ import React, {FC, useState, useEffect, useRef} from 'react';
 type TSyncComponent = () => Promise<{default: (props: any) => JSX.Element}>;
 interface ILoadPageProps {
     component: TSyncComponent | ((props: any) => JSX.Element);
+    children: JSX.Element;
+    // name: string;
 }
 
 const LoadPage: FC<ILoadPageProps> = (props) => {

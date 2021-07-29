@@ -12,25 +12,25 @@ const defaultData = {
 // {[key in keyof typeof defaultData]: any}
 // 处理函数
 const mapFn: TMap = {
-    asdf: ({state, data, callback, allState, dispatch, asyncStatus, type}) => {
+    'test/asdf': ({state, data, callback, allState, dispatch, asyncStatus, type}) => {
         state.abc = data;
         callback();
     },
-    assss: (obj) => asyncAction(obj, 'ddd', (params) => {
+    'test/assss': (obj) => asyncAction(obj, 'ddd', (params) => {
         const {state, data, callback, allState, dispatch, asyncStatus, type} = obj;
         // console.log(params);
 
         return new Promise((rel, rej) => {
             setTimeout(() => {
                 dispatch({
-                    type: 'asdf',
+                    type: 'test2/asdf2',
                     payload: 'success',
                 });
                 rel('success');
                 // rej('fail');
             }, 1000);
-        })
+        });
     })
-}
+};
 
 export default createReducersModule('test', defaultData, mapFn);

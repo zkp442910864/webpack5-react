@@ -11,7 +11,7 @@ export interface IMapFunData {
      * 异步接口产生的状态
      */
     asyncStatus?: 'load' | 'success' | 'fail';
-};
+}
 export type TMap = {
     /**
      * 传入的 callback 不执行的话，会导致 Promise 一直处理在 pending状态
@@ -60,7 +60,7 @@ export const getReducersModule = () => {
     // });
 
     return obj;
-}
+};
 
 /**
  * 二次封装 dispatch
@@ -91,7 +91,7 @@ export const dispatchPackage = (dispatch: any, allState: IOBJ, type: string, pay
             }
         });
     });
-}
+};
 
 /**
  * 异步函数
@@ -119,7 +119,7 @@ export const asyncAction = (obj: IMapFunData, valKey: string, requestFun: (param
             allState,
             callback
         } as TActionData);
-    }
+    };
 
 
     if (asyncStatus === 'success' || asyncStatus === 'fail') {
@@ -150,7 +150,7 @@ export const asyncAction = (obj: IMapFunData, valKey: string, requestFun: (param
         });
     }
 
-}
+};
 
 /**
  * 生成 store模块
@@ -168,6 +168,11 @@ export const createReducersModule = (namespace: string, defaultData: IOBJ, mapFn
 
             try {
                 if (action.type && !~action.type.indexOf('@@redux')) {
+                    // TODO: dispatch: type值定义为 模块名称/执行任务
+                    // 符合的 模块才执行
+                    if (!~action.type.indexOf(`${namespace}/`)) {
+                        return state;
+                    }
                     // debugger
                     action.callback = typeof action.callback === 'function' ? action.callback : (() => {});
                     mapFn[action.type] && mapFn[action.type]({
@@ -183,8 +188,9 @@ export const createReducersModule = (namespace: string, defaultData: IOBJ, mapFn
             } catch (error) {
                 console.error(error);
             }
-            return Object.assign({}, state)
+
+            return Object.assign({}, state);
         },
-    }
-}
+    };
+};
 

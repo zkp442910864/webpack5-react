@@ -1,41 +1,48 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "es2021": true
+    env: {
+        browser: true,
+        es2021: true,
+        node: true,
+        commonjs: true,
+        es6: true,
+        amd: true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
+    extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:@typescript-eslint/recommended'
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+        ecmaFeatures: {
+            jsx: true
         },
-        "ecmaVersion": 12,
-        "sourceType": "module"
+        ecmaVersion: 12,
+        sourceType: 'module'
     },
-    "plugins": [
-        "react",
-        "@typescript-eslint"
+    plugins: [
+        'react',
+        '@typescript-eslint'
     ],
-    "rules": {
-        "indent": [
-            "error",
-            4
+    rules: {
+        indent: ['error', 4],
+        'linebreak-style': ['error', 'unix'],
+        quotes: ['error', 'single'],
+        semi: ['error', 'always'],
+        'react/prop-types': ['off'],
+        '@typescript-eslint/explicit-module-boundary-types': [
+            'off',
+            {
+                // allowHigherOrderFunctions: false,
+                allowDirectConstAssertionInArrowFunctions: true
+            }
         ],
-        "linebreak-style": [
-            "error",
-            "windows"
+        '@typescript-eslint/no-empty-function': [
+            'warn',
+            {allow: ['arrowFunctions']}
         ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
+        '@typescript-eslint/no-var-requires': ['off'],
+        'eol-last': ['error'],
+        'quote-props': ['error', 'as-needed']
     }
 };

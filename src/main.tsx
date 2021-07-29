@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import {RouterView} from '@/router';
 import {Provider} from 'react-redux';
 import store from '@/store';
+import {RouterView} from '@/router';
 
 // 主入口
 const Main = () => {
@@ -14,7 +14,7 @@ const Main = () => {
             <RouterView/>
         </Provider>
     );
-}
+};
 
 // window.store = store;
 ReactDom.render(<Main />, document.getElementById('root'));

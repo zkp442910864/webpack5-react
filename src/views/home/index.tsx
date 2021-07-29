@@ -1,22 +1,20 @@
 import React, {FC, useEffect} from 'react';
 // import {useHistory} from 'react-router';
-// import {useRouterData} from '@/router';
 import {useStoreModule} from '@/store';
 
-const Main: FC = (props, context) => {
-    // const router = useRouterData();
-    const [test, dispatch] = useStoreModule((state) => state.test);
+const Home: FC = (props) => {
+    const [test, dispatch] = useStoreModule((state) => state);
 
     useEffect(() => {
         // console.log(test)
         // dispatch('asdf', 2)
         // console.log(dispatch('assss', 1))
-        dispatch('assss', 1).then((res) => {
+        dispatch('test/assss', 1).then((res) => {
             console.log(res);
         }).catch((err) => {
             console.log(err);
         });
-    }, [])
+    }, []);
 
     return (
         <div>
@@ -25,11 +23,11 @@ const Main: FC = (props, context) => {
                 {JSON.stringify(test, null, 4)}
             </pre>
             {/* 包装层 {JSON.stringify(store.getState())} */}
-            <div >~~~~~~~~</div>
+            <div>~~~~~~~~</div>
             {props.children}
         </div>
-    )
+    );
 };
 
-export default Main;
+export default Home;
 

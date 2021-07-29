@@ -1,12 +1,16 @@
 import React, {FC} from 'react';
+import {useRouter} from '@/router';
 
 const Test5: FC = (props) => {
+    const router = useRouter();
 
-    // console.log(props);
+    const link = () => {
+        router.history.push('/login');
+    };
 
     return (
-        <div>Test-5</div>
-    )
+        <div onClick={link}>Test-5</div>
+    );
 };
 
 export default Test5;

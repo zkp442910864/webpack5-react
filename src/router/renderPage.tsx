@@ -13,7 +13,7 @@ const RenderPage = () => {
         if (!list.length) return (<></>);
 
         return (
-            // TODO: 只匹配一次，一旦命中，就不会继续匹配
+            // TODO: Switch 只匹配一次，一旦命中，就不会继续匹配
             <Switch>
                 {
                     list.map((item, index) => {
@@ -23,16 +23,16 @@ const RenderPage = () => {
                         // 正常路由数据
                         const normalArr = childRoutes.filter((ii: any) => !ii.redirect);
 
-                        const NewRoute: any = !!redirect ? Redirect : Route;
+                        const NewRoute: any = redirect ? Redirect : Route;
 
                         return (
                             <NewRoute
                                 key={index}
-                                path={path}
-                                // 重定向使用的
+                                // ~重定向使用的
                                 form={path}
                                 to={redirect}
-                                // 重定向使用的
+                                // 重定向使用的~
+                                path={path}
                                 {...other}
                                 render={({children, ...props}: any) => {
                                     // TODO: 大概思路： 弄个中间组件，增加个 beforeEach 和 afterEact 模仿 vue-router的方式
@@ -55,7 +55,7 @@ const RenderPage = () => {
                 }
             </Switch>
         );
-    }
+    };
 
 
     return (
@@ -63,6 +63,6 @@ const RenderPage = () => {
             {renderRoutes(config)}
         </HashRouter>
     );
-}
+};
 
 export default RenderPage;

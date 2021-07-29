@@ -3,14 +3,14 @@ const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 // 获得完整路径
 const getFullUrl = (url) => {
     return path.resolve(__dirname, '.', url);
-}
+};
 
 // 获取ip地址
 const getNetworkIp = () => {
@@ -31,7 +31,7 @@ const getNetworkIp = () => {
         needHost = 'localhost';
     }
     return needHost;
-}
+};
 
 const config = {
     sourceMap: true,
@@ -67,6 +67,13 @@ module.exports = (env, argv) => {
                         // },
                         {
                             loader: 'babel-loader',
+                        },
+                        {
+                            loader: 'eslint-loader',
+                            options: {
+                                cache: true,
+                                quiet: true
+                            }
                         }
                     ],
                 },
@@ -140,7 +147,7 @@ module.exports = (env, argv) => {
                 '@': getFullUrl('src')
             }
         },
-    }
-}
+    };
+};
 
 
