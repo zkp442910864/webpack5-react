@@ -35,15 +35,30 @@ export interface TActionData {
 
 
 /**
- * 获取模块
+ * 动态获取模块
  * @param arr {module: any, namespace: string}[]
  * @returns {[namespace]: module}
  */
-export const getReducersModule = (arr: {module: any, namespace: string}[]) => {
-    const obj: any = {};
-    arr.forEach((item) => {
-        obj[item.namespace] = item.module;
-    })
+export const getReducersModule = () => {
+    type TModule = {module: any, namespace: string};
+
+    const files = (require as any).context('./modules', true, /.ts$/);
+    // const rModules: TModule[] = [];
+    const obj: IOBJ = {};
+
+    // console.dir(files);
+    // console.log(files.keys());
+    files.keys().forEach((item: TModule) => {
+        const child = files(item).default;
+        // console.log(child);
+        // rModules.push(child);
+        obj[child.namespace] = child.module;
+    });
+
+    // rModules.forEach((item) => {
+    //     obj[item.namespace] = item.module;
+    // });
+
     return obj;
 }
 
