@@ -1,6 +1,7 @@
 import React, {FC, useEffect} from 'react';
 // import {useHistory} from 'react-router';
 import {useStoreModule} from '@/store';
+import './index.less';
 
 const Home: FC = (props) => {
     const [test, dispatch] = useStoreModule((state) => state);
@@ -17,13 +18,13 @@ const Home: FC = (props) => {
     }, []);
 
     return (
-        <div>
+        <div className="bbb">
             包装层
             <pre>
                 {JSON.stringify(test, null, 4)}
             </pre>
             {/* 包装层 {JSON.stringify(store.getState())} */}
-            <div>~~~~~~~~</div>
+            <div className="flex-box">~~~~~~~~</div>
             {props.children}
         </div>
     );

@@ -3,6 +3,7 @@ import ReactDom from 'react-dom';
 import {Provider} from 'react-redux';
 import store from '@/store';
 import {RouterView} from '@/router';
+import '@/assets/style/index.less';
 
 // 主入口
 const Main = () => {
@@ -17,4 +18,5 @@ const Main = () => {
 };
 
 // window.store = store;
+console.log(process.env.CUSTOM_NODE_ENV);
 ReactDom.render(<Main />, document.getElementById('root'));

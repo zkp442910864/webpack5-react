@@ -1,11 +1,37 @@
 
+
+// webpack5的变化 https://blog.csdn.net/weixin_41319237/article/details/115488032
+// 版本hash 解释 https://www.cnblogs.com/heyushuo/p/8543889.html
+
 const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+
+// function recursiveIssuer(m, c) {
+//     const issuer = c.moduleGraph.getIssuer(m);
+//     // For webpack@4 issuer = m.issuer
+
+//     if (issuer) {
+//         return recursiveIssuer(issuer, c);
+//     }
+
+//     const chunks = c.chunkGraph.getModuleChunks(m);
+//     // For webpack@4 chunks = m._chunks
+
+//     for (const chunk of chunks) {
+//         return chunk.name;
+//     }
+
+//     return false;
+// }
+
 
 // 获得完整路径
 const getFullUrl = (url) => {
@@ -39,24 +65,32 @@ const config = {
     port: '3333',
     include: [getFullUrl('src')],
     exclude: [/node_modules/],
-    networkIp: getNetworkIp()
+    networkIp: getNetworkIp(),
+    globalLessData: getFullUrl('src/assets/style/params.less'),
+    pageTitle: 'react',
 };
 
-
 module.exports = (env, argv) => {
-    const {publicPath, sourceMap, include, exclude, port, networkIp} = config;
+    const {publicPath, sourceMap, include, exclude, port, networkIp, globalLessData, pageTitle} = config;
     // console.log(env, argv);
+    const isDev = argv.mode === 'development';
     // console.log(process.env);
 
     return {
-        devtool: 'eval-source-map',
-        entry: getFullUrl('src/main.tsx'),
+        devtool: isDev ? 'eval-source-map' : 'eval',
+        // devtool: 'eval-source-map',
+        entry: {
+            main: getFullUrl('src/main.tsx'),
+        },
         output: {
             path: getFullUrl('dist'),
+            filename: '[name].[contenthash].js',
+            // chunkFilename: '[name].[contenthash].js',
             publicPath,
         },
         module: {
             rules: [
+                // ts
                 {
                     test: /\.(tsx|ts)$/,
                     include,
@@ -77,15 +111,33 @@ module.exports = (env, argv) => {
                         }
                     ],
                 },
+                // less cs
                 {
                     test: /\.(less|css)$/,
                     use: [
-                        {loader: 'style-loader'},
+                        // {loader: 'style-loader'},
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {
+                                // publicPath
+                                // emit: false
+                            }
+                        },
                         {
                             loader: 'css-loader',
                             options: {
+                                esModule: true,
+                                modules: {
+                                    namedExport: true,
+                                },
                                 sourceMap
                             },
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                sourceMap
+                            }
                         },
                         {
                             loader: 'less-loader',
@@ -93,12 +145,48 @@ module.exports = (env, argv) => {
                                 sourceMap
                             },
                         },
+                        {
+                            loader: 'style-resources-loader',
+                            options: {
+                                patterns: globalLessData
+                            }
+                        }
                     ]
-                }
+                },
+                // 图片
+                {
+                    test: /\.(png|svg|jpg|gif)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                        }
+                    ]
+                },
+                // 文字
+                {
+                    test: /\.(woff|woff2|eot|ttf|otf)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                        }
+                    ]
+                },
             ],
         },
         plugins: [
-            // new CleanWebpackPlugin(['dist']),
+            // new BundleAnalyzerPlugin(),
+            // 默认取 output.path
+            new CleanWebpackPlugin(),
+            new MiniCssExtractPlugin({
+                // filename: 'static/css/style.css'
+                filename: '[name].[contenthash].css',
+                // filename: ({ chunk }) => {
+                //     console.log(chunk);
+                //     return `${chunk.name.replace('/js/', '/css/')}.css`;
+                // },
+                // chunkFilename: '[id].css',
+                // experimentalUseImportModule: true,
+            }),
             new WebpackBar({
                 name: '编译进度',
                 basic: false,
@@ -115,9 +203,12 @@ module.exports = (env, argv) => {
             }),
             new HtmlWebpackPlugin({
                 template: getFullUrl('public/index.html'),
-                title: 'react',
-                hash: true,
-                filename: getFullUrl('dist/index.html'),
+                title: pageTitle,
+                hash: false,
+                // filename: getFullUrl('dist/index.html'),
+                inject: 'body',
+                scriptLoading: 'blocking',
+                // chunks: ['chunk-vendors', 'app'],
             }),
             new webpack.DefinePlugin({
                 'process.env': {
@@ -125,6 +216,67 @@ module.exports = (env, argv) => {
                 }
             }),
         ],
+        optimization: {
+            splitChunks: {
+                // chunks: 'all',
+                // minSize: 20000,
+                // minRemainingSize: 0,
+                // minChunks: 1,
+                // maxAsyncRequests: 30,
+                // maxInitialRequests: 30,
+                // enforceSizeThreshold: 50000,
+                // cacheGroups: {
+                //     defaultVendors: {
+                //         test: /[\\/]node_modules[\\/]/,
+                //         priority: -10,
+                //         name: 'chunk-vendors',
+                //         reuseExistingChunk: true,
+                //     },
+                //     default: {
+                //         minChunks: 2,
+                //         priority: -20,
+                //         reuseExistingChunk: true,
+                //     },
+                // },
+                cacheGroups: {
+                    vendors: {
+                        name: 'vendors',
+                        test: /[\\/]node_modules[\\/]/,
+                        chunks: 'all',
+                        priority: -20,
+                        reuseExistingChunk: true
+                    },
+                    // app: {
+                    //     test: /[\\/]src[\\/]/,
+                    //     name: 'app-[name].[contenthash].js',
+                    //     chunks: 'all',
+                    //     priority: -19,
+                    // },
+                    // styles: {
+                    //     name: 'styles',
+                    //     type: 'css/mini-extract',
+                    //     chunks: 'initial',
+                    //     enforce: true,
+                    // },
+                    // fooStyles: {
+                    //     name: 'styles_foo',
+                    //     test: (m, c, entry = 'main') =>
+                    //         m.constructor.name === 'CssModule' &&
+                    //       recursiveIssuer(m, c) === entry,
+                    //     chunks: 'all',
+                    //     enforce: true,
+                    // },
+                }
+            },
+            // runtimeChunk: true
+            // mangleWasmImports: true
+            // 如果模块已经包含在所有父级模块中，告知 webpack 从 chunk 中检测出这些模块，或移除这些模块。
+            removeAvailableModules: true,
+            // chunk 为空，告知 webpack 检测或移除这些 chunk
+            removeEmptyChunks: true,
+            // 合并含有相同模块的 chunk
+            mergeDuplicateChunks: true,
+        },
         devServer: {
             // webpack-dev-server 会从 output.path 中定义的目录为服务提供 bundle 文件，即，文件将可以通过 http://[devServer.host]:[devServer.port]/[output.publicPath]/[output.filename] 进行访问。
             // 貌似设置成绝对路径才能正常加载页面
