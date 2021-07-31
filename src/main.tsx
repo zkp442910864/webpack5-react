@@ -3,7 +3,7 @@ import ReactDom from 'react-dom';
 import {Provider} from 'react-redux';
 import store from '@/store';
 import {RouterView} from '@/router';
-import '@/assets/style/index.less';
+import '@/assets/style/common.less';
 
 // 主入口
 const Main = () => {

@@ -26,7 +26,7 @@ module.exports = {
     ],
     rules: {
         indent: ['error', 4],
-        'linebreak-style': ['error', 'unix'],
+        'linebreak-style': ['off', 'unix'],
         quotes: ['error', 'single'],
         semi: ['error', 'always'],
         'react/prop-types': ['off'],

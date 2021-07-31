@@ -1,5 +1,6 @@
 import React, {FC, useEffect} from 'react';
 // import {useHistory} from 'react-router';
+import Text from '@/components/Test';
 import {useStoreModule} from '@/store';
 import './index.less';
 
@@ -20,6 +21,7 @@ const Home: FC = (props) => {
     return (
         <div className="bbb">
             包装层
+            <Text />
             <pre>
                 {JSON.stringify(test, null, 4)}
             </pre>

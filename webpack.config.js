@@ -14,23 +14,23 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
-// function recursiveIssuer(m, c) {
-//     const issuer = c.moduleGraph.getIssuer(m);
-//     // For webpack@4 issuer = m.issuer
+function recursiveIssuer(m, c) {
+    const issuer = c.moduleGraph.getIssuer(m);
+    // For webpack@4 issuer = m.issuer
 
-//     if (issuer) {
-//         return recursiveIssuer(issuer, c);
-//     }
+    if (issuer) {
+        return recursiveIssuer(issuer, c);
+    }
 
-//     const chunks = c.chunkGraph.getModuleChunks(m);
-//     // For webpack@4 chunks = m._chunks
+    const chunks = c.chunkGraph.getModuleChunks(m);
+    // For webpack@4 chunks = m._chunks
 
-//     for (const chunk of chunks) {
-//         return chunk.name;
-//     }
+    for (const chunk of chunks) {
+        return chunk.name;
+    }
 
-//     return false;
-// }
+    return false;
+}
 
 
 // 获得完整路径
@@ -71,16 +71,20 @@ const config = {
 };
 
 module.exports = (env, argv) => {
-    const {publicPath, sourceMap, include, exclude, port, networkIp, globalLessData, pageTitle} = config;
+    let {publicPath, sourceMap, include, exclude, port, networkIp, globalLessData, pageTitle} = config;
     // console.log(env, argv);
     const isDev = argv.mode === 'development';
-    // console.log(process.env);
+
+    if (!isDev) {
+        sourceMap = false;
+    }
 
     return {
         devtool: isDev ? 'eval-source-map' : 'eval',
         // devtool: 'eval-source-map',
         entry: {
             main: getFullUrl('src/main.tsx'),
+            // home: getFullUrl('src/views/home/index.less'),
         },
         output: {
             path: getFullUrl('dist'),
@@ -115,23 +119,41 @@ module.exports = (env, argv) => {
                 {
                     test: /\.(less|css)$/,
                     use: [
-                        // {loader: 'style-loader'},
+                        // {
+                        //     loader: 'style-loader',
+                        //     options: {
+                        //         // singleton: true
+                        //     }
+                        // },
+                        // {
+                        //     loader: MiniCssExtractPlugin.loader,
+                        //     options: {
+                        //         // publicPath
+                        //         // emit: false
+                        //         // layer: ''
+                        //     }
+                        // },
                         {
-                            loader: MiniCssExtractPlugin.loader,
+                            loader: 'file-loader',
                             options: {
-                                // publicPath
-                                // emit: false
+                                name: '[name].[contenthash].css',
                             }
+                        },
+                        {
+                            loader: 'extract-loader'
                         },
                         {
                             loader: 'css-loader',
                             options: {
                                 esModule: true,
-                                modules: {
-                                    namedExport: true,
-                                },
+                                // modules: {
+                                //     namedExport: true,
+                                // },
                                 sourceMap
                             },
+                        },
+                        {
+                            loader: 'scoped-css-loader'
                         },
                         {
                             loader: 'postcss-loader',
@@ -177,16 +199,16 @@ module.exports = (env, argv) => {
             // new BundleAnalyzerPlugin(),
             // 默认取 output.path
             new CleanWebpackPlugin(),
-            new MiniCssExtractPlugin({
-                // filename: 'static/css/style.css'
-                filename: '[name].[contenthash].css',
-                // filename: ({ chunk }) => {
-                //     console.log(chunk);
-                //     return `${chunk.name.replace('/js/', '/css/')}.css`;
-                // },
-                // chunkFilename: '[id].css',
-                // experimentalUseImportModule: true,
-            }),
+            // new MiniCssExtractPlugin({
+            //     // filename: 'static/css/style.css'
+            //     filename: '[name].[contenthash].css',
+            //     chunkFilename: '[name].[contenthash].[id].css',
+            //     // filename: ({ chunk }) => {
+            //     //     console.log(chunk);
+            //     //     return `${chunk.name.replace('/js/', '/css/')}.css`;
+            //     // },
+            //     // experimentalUseImportModule: true,
+            // }),
             new WebpackBar({
                 name: '编译进度',
                 basic: false,
@@ -258,9 +280,9 @@ module.exports = (env, argv) => {
                     //     chunks: 'initial',
                     //     enforce: true,
                     // },
-                    // fooStyles: {
-                    //     name: 'styles_foo',
-                    //     test: (m, c, entry = 'main') =>
+                    // home: {
+                    //     name: 'home',
+                    //     test: (m, c, entry = 'home') =>
                     //         m.constructor.name === 'CssModule' &&
                     //       recursiveIssuer(m, c) === entry,
                     //     chunks: 'all',
