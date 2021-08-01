@@ -82,10 +82,15 @@ module.exports = (env, argv) => {
     return {
         devtool: isDev ? 'eval-source-map' : 'eval',
         // devtool: 'eval-source-map',
-        entry: {
-            main: getFullUrl('src/main.tsx'),
-            // home: getFullUrl('src/views/home/index.less'),
-        },
+        entry: getFullUrl('src/main.ts'),
+        // entry: {
+        //     main: getFullUrl('src/main.tsx'),
+        //     // home: getFullUrl('src/views/home/index.less'),
+        // },
+        // entry: [
+        //     getFullUrl('src/main.tsx'),
+        //     getFullUrl('src/views/home/index.less'),
+        // ],
         output: {
             path: getFullUrl('dist'),
             filename: '[name].[contenthash].js',
@@ -125,27 +130,26 @@ module.exports = (env, argv) => {
                         //         // singleton: true
                         //     }
                         // },
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {}
+                        },
                         // {
-                        //     loader: MiniCssExtractPlugin.loader,
+                        //     loader: 'file-loader',
                         //     options: {
-                        //         // publicPath
-                        //         // emit: false
-                        //         // layer: ''
+                        //         name: '[name].[contenthash].css',
+                        //         options: {
+                        //             // esModule: false
+                        //         }
                         //     }
                         // },
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: '[name].[contenthash].css',
-                            }
-                        },
-                        {
-                            loader: 'extract-loader'
-                        },
+                        // {
+                        //     loader: 'extract-loader'
+                        // },
                         {
                             loader: 'css-loader',
                             options: {
-                                esModule: true,
+                                // esModule: true,
                                 // modules: {
                                 //     namedExport: true,
                                 // },
@@ -181,6 +185,12 @@ module.exports = (env, argv) => {
                     use: [
                         {
                             loader: 'file-loader',
+                            options: {
+                                // https://www.jianshu.com/p/c8d3b2a912c3
+                                // 由file-loader版本过高引发的兼容问题，esModule选项已在4.3.0版本的文件加载器中引入，而在5.0.0版本中，默认情况下已将其设置为true。
+                                esModule: false,
+                                name: '[name].[sha512:hash:base64:7].[ext]',
+                            }
                         }
                     ]
                 },
@@ -199,16 +209,10 @@ module.exports = (env, argv) => {
             // new BundleAnalyzerPlugin(),
             // 默认取 output.path
             new CleanWebpackPlugin(),
-            // new MiniCssExtractPlugin({
-            //     // filename: 'static/css/style.css'
-            //     filename: '[name].[contenthash].css',
-            //     chunkFilename: '[name].[contenthash].[id].css',
-            //     // filename: ({ chunk }) => {
-            //     //     console.log(chunk);
-            //     //     return `${chunk.name.replace('/js/', '/css/')}.css`;
-            //     // },
-            //     // experimentalUseImportModule: true,
-            // }),
+            new MiniCssExtractPlugin({
+                filename: '[name].[contenthash].css',
+                chunkFilename: '[id].[contenthash].css',
+            }),
             new WebpackBar({
                 name: '编译进度',
                 basic: false,
@@ -226,10 +230,10 @@ module.exports = (env, argv) => {
             new HtmlWebpackPlugin({
                 template: getFullUrl('public/index.html'),
                 title: pageTitle,
-                hash: false,
+                // hash: false,
                 // filename: getFullUrl('dist/index.html'),
                 inject: 'body',
-                scriptLoading: 'blocking',
+                // scriptLoading: 'blocking',
                 // chunks: ['chunk-vendors', 'app'],
             }),
             new webpack.DefinePlugin({

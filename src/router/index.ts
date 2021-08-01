@@ -1,16 +1,35 @@
 
+import {default as RouterView, setBeforeEach, setAfterEach} from './inbulk/RenderPage';
+export {useRouter} from './config';
 
-import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router';
-export {default as RouterView} from './renderPage';
+// 路由前
+setBeforeEach((next, target) => {
+    console.log('before');
+    const isLoginUrl = target.match.path === '/login';
+    const isLogin = window.localStorage.getItem('asd');
 
-// 获取路由参数
-export const useRouter = () => {
-    return {
-        history: useHistory(),
-        location: useLocation(),
-        params: useParams(),
-        match: useRouteMatch(),
-    };
+    switch (true) {
+        // 未登录 未在登录页面
+        case !isLogin && !isLoginUrl:
+            // next();
+            next('/login', 'replace');
+            break;
+        // 登录了 在登录页面
+        case isLogin && isLoginUrl:
+            next('/', 'replace');
+            break;
+        default:
+            next();
+            break;
+    }
+});
+
+// 路由后
+setAfterEach((target) => {
+    console.log('after');
+});
+
+export {
+    RouterView
 };
-
 

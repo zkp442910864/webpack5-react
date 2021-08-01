@@ -14,8 +14,9 @@ module.exports = {
             {
                 // exclude: [path.resolve(__dirname, '.', '/src/assets/style/common.less')],
                 // 包含 common.less 都会被过滤
-                include: '^((?!common.less).)*.(sa|sc|le|c)ss$',
-                // include: '.(sa|sc|le|c)ss$',
+                // include: '^((?!common.less).)*.(sa|sc|le|c)ss$',
+                // 只对带有 scoped 名称的起作用
+                include: '.scoped.(sa|sc|le|c)ss$',
             }
         ]
     ]

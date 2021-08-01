@@ -2,7 +2,7 @@ import React, {FC, useEffect} from 'react';
 // import {useHistory} from 'react-router';
 import Text from '@/components/Test';
 import {useStoreModule} from '@/store';
-import './index.less';
+import './index.scoped.less';
 
 const Home: FC = (props) => {
     const [test, dispatch] = useStoreModule((state) => state);

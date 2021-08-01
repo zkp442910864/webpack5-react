@@ -25,7 +25,7 @@ module.exports = {
         '@typescript-eslint'
     ],
     rules: {
-        indent: ['error', 4],
+        indent: ['error', 4, {SwitchCase: 1}],
         'linebreak-style': ['off', 'unix'],
         quotes: ['error', 'single'],
         semi: ['error', 'always'],
