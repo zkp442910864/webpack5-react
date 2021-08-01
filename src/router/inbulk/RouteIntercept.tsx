@@ -39,6 +39,7 @@ const RouteIntercept: FC<IRouteInterceptProps> = (props) => {
     const next: TNext = (path, type = 'push') => {
         // console.log('下一步');
         if (path) {
+            // 直接执行会报错
             setTimeout(() => {
                 history[type](path);
             }, 0);
