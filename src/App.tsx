@@ -13,6 +13,7 @@ export default () => {
             <Provider store={store}>
                 {/* 渲染路由页面 */}
                 <RouterView/>
+                <div id="funModules"></div>
             </Provider>
         );
     };
