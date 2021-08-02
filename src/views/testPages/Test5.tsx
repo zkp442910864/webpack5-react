@@ -15,6 +15,7 @@ const Test5: FC = (props) => {
         <div onClick={link}>
             Test-5555
             <img src={require('@/assets/img/bd.jpg')}/>
+            <img src={require('@/assets/img/wish.png')}/>
         </div>
     );
 };

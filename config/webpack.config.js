@@ -12,30 +12,47 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
-function recursiveIssuer(m, c) {
-    const issuer = c.moduleGraph.getIssuer(m);
-    // For webpack@4 issuer = m.issuer
+// function recursiveIssuer(m, c) {
+//     const issuer = c.moduleGraph.getIssuer(m);
+//     // For webpack@4 issuer = m.issuer
 
-    if (issuer) {
-        return recursiveIssuer(issuer, c);
-    }
+//     if (issuer) {
+//         return recursiveIssuer(issuer, c);
+//     }
 
-    const chunks = c.chunkGraph.getModuleChunks(m);
-    // For webpack@4 chunks = m._chunks
+//     const chunks = c.chunkGraph.getModuleChunks(m);
+//     // For webpack@4 chunks = m._chunks
 
-    for (const chunk of chunks) {
-        return chunk.name;
-    }
+//     for (const chunk of chunks) {
+//         return chunk.name;
+//     }
 
-    return false;
-}
+//     return false;
+// }
 
 
 // 获得完整路径
 const getFullUrl = (url) => {
     return path.resolve(__dirname, '.', url);
+};
+
+// 设置文件存放位置
+const setFileLocationInit = (fileName) => {
+    switch (true) {
+        case /.js$/.test(fileName):
+            return `js/${fileName}`;
+        case /.css$/.test(fileName):
+            return `css/${fileName}`;
+        case '[name].[sha512:hash:base64:7].[ext]' === fileName:
+            return `img/${fileName}`;
+        case '[name].[sha512:hash:base64:8].[ext]' === fileName:
+            return `font/${fileName}`;
+        default:
+            return fileName;
+    }
 };
 
 // 获取ip地址
@@ -62,6 +79,7 @@ const getNetworkIp = () => {
 const config = {
     sourceMap: true,
     publicPath: './',
+    assetsDir: 'static',
     port: '3333',
     include: [getFullUrl('src')],
     exclude: [/node_modules/],
@@ -71,9 +89,13 @@ const config = {
 };
 
 module.exports = (env, argv) => {
-    let {publicPath, sourceMap, include, exclude, port, networkIp, globalLessData, pageTitle} = config;
+    let {publicPath, sourceMap, include, exclude, port, networkIp, globalLessData, pageTitle, assetsDir} = config;
     // console.log(env, argv);
     const isDev = argv.mode === 'development';
+
+    const setFileLocation = (fileName) => {
+        return assetsDir ? `${assetsDir}/${setFileLocationInit(fileName)}` : setFileLocationInit(fileName);
+    };
 
     if (!isDev) {
         sourceMap = false;
@@ -81,6 +103,13 @@ module.exports = (env, argv) => {
 
     return {
         devtool: isDev ? 'eval-source-map' : 'eval',
+        stats:{
+            // colors: true,
+            modules: false,
+            // children: false,
+            // chunks: false,
+            // chunkModules: false
+        },
         // devtool: 'eval-source-map',
         entry: getFullUrl('src/main.ts'),
         // entry: {
@@ -93,7 +122,7 @@ module.exports = (env, argv) => {
         // ],
         output: {
             path: getFullUrl('dist'),
-            filename: '[name].[contenthash].js',
+            filename: setFileLocation('[name].[contenthash].js'),
             // chunkFilename: '[name].[contenthash].js',
             publicPath,
         },
@@ -183,13 +212,24 @@ module.exports = (env, argv) => {
                 {
                     test: /\.(png|svg|jpg|gif)$/,
                     use: [
+                        // {
+                        //     loader: 'file-loader',
+                        //     options: {
+                        //         // https://www.jianshu.com/p/c8d3b2a912c3
+                        //         // 由file-loader版本过高引发的兼容问题，esModule选项已在4.3.0版本的文件加载器中引入，而在5.0.0版本中，默认情况下已将其设置为true。
+                        //         esModule: false,
+                        //         name: setFileLocation('[name].[sha512:hash:base64:7].[ext]'),
+                        //     }
+                        // },
                         {
-                            loader: 'file-loader',
+                            loader: 'url-loader',
                             options: {
                                 // https://www.jianshu.com/p/c8d3b2a912c3
                                 // 由file-loader版本过高引发的兼容问题，esModule选项已在4.3.0版本的文件加载器中引入，而在5.0.0版本中，默认情况下已将其设置为true。
                                 esModule: false,
-                                name: '[name].[sha512:hash:base64:7].[ext]',
+                                // 超过 5kb的原图输出
+                                limit: 5120,
+                                name: setFileLocation('[name].[sha512:hash:base64:7].[ext]'),
                             }
                         }
                     ]
@@ -200,6 +240,9 @@ module.exports = (env, argv) => {
                     use: [
                         {
                             loader: 'file-loader',
+                            options: {
+                                name: setFileLocation('[name].[sha512:hash:base64:8].[ext]'),
+                            }
                         }
                     ]
                 },
@@ -209,9 +252,23 @@ module.exports = (env, argv) => {
             // new BundleAnalyzerPlugin(),
             // 默认取 output.path
             new CleanWebpackPlugin(),
+            new CopyWebpackPlugin({
+                patterns: [
+                    {
+                        from: getFullUrl('public'),
+                        to: getFullUrl('dist'),
+                        noErrorOnMissing: true,
+                        globOptions: {
+                            ignore: [
+                                '**/index.html',
+                            ]
+                        }
+                    }
+                ]
+            }),
             new MiniCssExtractPlugin({
-                filename: '[name].[contenthash].css',
-                chunkFilename: '[id].[contenthash].css',
+                filename: setFileLocation('[name].[contenthash].css'),
+                chunkFilename: setFileLocation('[id].[contenthash].css'),
             }),
             new WebpackBar({
                 name: '编译进度',

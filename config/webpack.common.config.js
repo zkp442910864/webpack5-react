@@ -1,0 +1,198 @@
+
+const webpack = require('webpack');
+// progress-bar-webpack-plugin
+const WebpackBar = require('webpackbar');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+
+module.exports = (env, argv, config) => {
+    const {
+        publicPath,
+        sourceMap,
+        include,
+        exclude,
+        port,
+        networkIp,
+        globalLessData,
+        pageTitle,
+        assetsDir,
+        setFileLocation,
+        isDev,
+        getFullUrl
+    } = config;
+
+    return {
+        devtool: isDev ? 'source-map' : 'eval',
+        stats: {
+            modules: false,
+        },
+        entry: getFullUrl('src/main.ts'),
+        output: {
+            path: getFullUrl('dist'),
+            filename: setFileLocation('[name].[contenthash].js'),
+            publicPath,
+        },
+        module: {
+            rules: [
+                // ts
+                {
+                    test: /\.(tsx|ts)$/,
+                    include,
+                    exclude,
+                    use: [
+                        {
+                            loader: 'babel-loader',
+                        },
+                        {
+                            loader: 'eslint-loader',
+                            options: {
+                                cache: true,
+                                quiet: true
+                            }
+                        }
+                    ],
+                },
+                // less cs
+                {
+                    test: /\.(less|css)$/,
+                    use: [
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {}
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                sourceMap
+                            },
+                        },
+                        {
+                            loader: 'scoped-css-loader'
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                sourceMap
+                            }
+                        },
+                        {
+                            loader: 'less-loader',
+                            options: {
+                                sourceMap
+                            },
+                        },
+                        {
+                            loader: 'style-resources-loader',
+                            options: {
+                                patterns: globalLessData
+                            }
+                        }
+                    ]
+                },
+                // 图片
+                {
+                    test: /\.(png|svg|jpg|gif)$/,
+                    use: [
+                        {
+                            loader: 'url-loader',
+                            options: {
+                                // https://www.jianshu.com/p/c8d3b2a912c3
+                                // 由file-loader版本过高引发的兼容问题，esModule选项已在4.3.0版本的文件加载器中引入，而在5.0.0版本中，默认情况下已将其设置为true。
+                                esModule: false,
+                                // 超过 5kb的原图输出
+                                limit: 5120,
+                                name: setFileLocation('[name].[sha512:hash:base64:7].[ext]'),
+                            }
+                        }
+                    ]
+                },
+                // 文字
+                {
+                    test: /\.(woff|woff2|eot|ttf|otf)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: setFileLocation('[name].[sha512:hash:base64:8].[ext]'),
+                            }
+                        }
+                    ]
+                },
+            ],
+        },
+        plugins: [
+            new CopyWebpackPlugin({
+                patterns: [
+                    {
+                        from: getFullUrl('public'),
+                        to: getFullUrl('dist'),
+                        noErrorOnMissing: true,
+                        globOptions: {
+                            ignore: [
+                                '**/index.html',
+                            ]
+                        }
+                    }
+                ]
+            }),
+            new MiniCssExtractPlugin({
+                filename: setFileLocation('[name].[contenthash].css'),
+                chunkFilename: setFileLocation('[id].[contenthash].css'),
+            }),
+            new WebpackBar({
+                name: '进度',
+                basic: false,
+                // profile: true
+            }),
+            new FriendlyErrorsWebpackPlugin({
+                // 成功的时候输出
+                compilationSuccessInfo: {
+                    messages: [`本地地址: http://localhost:${port} \n    IP 地 址: http://${networkIp}:${port}`],
+                    // notes: ['123']
+                },
+                // 是否每次都清空控制台
+                clearConsole: true,
+            }),
+            new HtmlWebpackPlugin({
+                template: getFullUrl('public/index.html'),
+                title: pageTitle,
+                inject: 'body',
+            }),
+            new webpack.DefinePlugin({
+                'process.env': {
+                    CUSTOM_NODE_ENV: JSON.stringify(env.CUSTOM_NODE_ENV)
+                }
+            }),
+        ],
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    vendors: {
+                        name: 'vendors',
+                        test: /[\\/]node_modules[\\/]/,
+                        chunks: 'all',
+                        priority: -20,
+                        reuseExistingChunk: true
+                    },
+                }
+            },
+            // 如果模块已经包含在所有父级模块中，告知 webpack 从 chunk 中检测出这些模块，或移除这些模块。
+            removeAvailableModules: true,
+            // chunk 为空，告知 webpack 检测或移除这些 chunk
+            removeEmptyChunks: true,
+            // 合并含有相同模块的 chunk
+            mergeDuplicateChunks: true,
+        },
+        resolve: {
+            extensions: ['.tsx', '.ts', '.js'],
+            alias: {
+                '@': getFullUrl('src')
+            }
+        },
+    };
+};
+
+
