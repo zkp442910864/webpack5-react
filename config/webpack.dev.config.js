@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = (env, argv, config) => {
     const {
@@ -25,6 +26,15 @@ module.exports = (env, argv, config) => {
             version: '1.0'
         },
         plugins: [
+            new FriendlyErrorsWebpackPlugin({
+                // 成功的时候输出
+                compilationSuccessInfo: {
+                    messages: [`本地地址: http://localhost:${port} \n    IP 地 址: http://${networkIp}:${port}`],
+                    // notes: ['123']
+                },
+                // 是否每次都清空控制台
+                clearConsole: true,
+            }),
             // 开启 hot时候，会自动添加
             new webpack.HotModuleReplacementPlugin()
         ],

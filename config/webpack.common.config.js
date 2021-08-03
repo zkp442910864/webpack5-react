@@ -5,7 +5,6 @@ const webpack = require('webpack');
 // progress-bar-webpack-plugin
 const WebpackBar = require('webpackbar');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -73,13 +72,12 @@ module.exports = (env, argv, config) => {
                 {
                     test: /\.(less|css)$/,
                     use: [
-                        {
-                            loader: MiniCssExtractPlugin.loader,
-                            options: {
-                                publicPath: './',
-                                // hmr: isDev,
-                            }
-                        },
+                        // {
+                        //     loader: MiniCssExtractPlugin.loader,
+                        //     options: {}
+                        // },
+                        // 为了热更新有效 开发使用 style-loader
+                        isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
                             options: {
@@ -195,15 +193,6 @@ module.exports = (env, argv, config) => {
                 name: '进度',
                 basic: false,
                 // profile: true
-            }),
-            new FriendlyErrorsWebpackPlugin({
-                // 成功的时候输出
-                compilationSuccessInfo: {
-                    messages: [`本地地址: http://localhost:${port} \n    IP 地 址: http://${networkIp}:${port}`],
-                    // notes: ['123']
-                },
-                // 是否每次都清空控制台
-                clearConsole: true,
             }),
             new HtmlWebpackPlugin({
                 template: getFullUrl('public/index.html'),

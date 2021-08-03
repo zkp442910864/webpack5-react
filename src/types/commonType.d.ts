@@ -5,6 +5,6 @@ interface IOBJ {
 }
 
 declare namespace global {
-    const store: any;
-    const getRouter: any;
+    let store: any;
+    let getRouter: any;
 }
