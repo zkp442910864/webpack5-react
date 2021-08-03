@@ -2,7 +2,7 @@
  * 渲染路由页面
  */
 // https://www.cnblogs.com/cckui/p/11490372.html
-import React, {useContext} from 'react';
+import React, {FC} from 'react';
 import {BrowserRouter, HashRouter, Route, Redirect, Switch} from 'react-router-dom';
 import LoadPage from './LoadPage';
 import RouteIntercept, {TBeforeEach, TAfterEach} from './RouteIntercept';
@@ -21,8 +21,7 @@ export const setAfterEach = (aeFun: TAfterEach) => {
 };
 
 
-const RenderPage = () => {
-
+const RenderPage: FC = () => {
     const renderRoutes = (list: any[]) => {
         if (!list.length) return (<></>);
 
@@ -75,9 +74,13 @@ const RenderPage = () => {
         );
     };
 
+    // console.log(router);
 
     return (
-        <HashRouter>
+        <HashRouter >
+            {/* 这一步预防，匹配不到对应路由的时候，获取不到值 */}
+            {/* 这一步预防，Redirect 重定向的时候，获取到的是上一个页面的参数 */}
+            <RouteIntercept noPage={true} routerInfo={{}} beforeEach={() => {}} afterEach={() => {}}/>
             {renderRoutes(routes)}
         </HashRouter>
     );

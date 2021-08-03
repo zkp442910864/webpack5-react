@@ -13,13 +13,24 @@ const setFileLocationInit = (fileName) => {
             return `js/${fileName}`;
         case /.css$/.test(fileName):
             return `css/${fileName}`;
-        case '[name].[sha512:hash:base64:7].[ext]' === fileName:
+        case ['[name].[sha512:hash:base64:7].[ext]', '[name].[hash:7][ext]'].includes(fileName):
             return `img/${fileName}`;
-        case '[name].[sha512:hash:base64:8].[ext]' === fileName:
+        case ['[name].[sha512:hash:base64:8].[ext]', '[name].[hash:8][ext]'].includes(fileName):
             return `font/${fileName}`;
         default:
             return fileName;
     }
+};
+
+// 设置资源的相对路径
+const setAssetsPublicPath = (outUrl, publicPath) => {
+    if (!['.', './'].includes(publicPath)) {
+        return undefined;
+    }
+    const result = outUrl.match(/\//g);
+    const count = Array.isArray(result) ? result.length : 0;
+
+    return count ? '../'.repeat(count) : undefined;
 };
 
 // 获取ip地址
@@ -47,4 +58,5 @@ module.exports = {
     getNetworkIp,
     setFileLocationInit,
     getFullUrl,
-}
+    setAssetsPublicPath
+};

@@ -8,7 +8,6 @@ const Home: FC = (props) => {
     const [test, dispatch] = useStoreModule((state) => state);
 
     useEffect(() => {
-        // console.log(test)
         // dispatch('asdf', 2)
         // console.log(dispatch('assss', 1))
         dispatch('test/assss', 1).then((res) => {
@@ -19,7 +18,7 @@ const Home: FC = (props) => {
     }, []);
 
     return (
-        <div className="bbb">
+        <div className="bbb bbb2">
             包装层
             <Text />
             <pre>

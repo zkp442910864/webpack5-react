@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import {Provider} from 'react-redux';
 import store from '@/store';
-import {RouterView} from '@/router';
+import {RouterView, getRouter} from '@/router';
 
 export default () => {
     // 主入口
@@ -18,7 +18,10 @@ export default () => {
         );
     };
 
-    console.log(process.env.CUSTOM_NODE_ENV);
+    if (process.env.CUSTOM_NODE_ENV === 'development') {
+        global.store = store;
+        global.getRouter = getRouter;
+    }
 
     ReactDom.render(<Main />, document.getElementById('root'));
 };

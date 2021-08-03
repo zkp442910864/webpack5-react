@@ -1,7 +1,7 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const {merge} = require('webpack-merge');
 
-const {getFullUrl, setFileLocationInit, getNetworkIp} = require('./config');
+const {getFullUrl, setFileLocationInit, getNetworkIp, setAssetsPublicPath} = require('./config');
 const commonFun = require('./webpack.common.config');
 const devFun = require('./webpack.dev.config');
 const proFun = require('./webpack.pro.config');
@@ -28,6 +28,7 @@ module.exports = (env, argv) => {
     config.sourceMap = isDev;
     config.isDev = isDev;
     config.setFileLocation = setFileLocation;
+    config.setAssetsPublicPath = setAssetsPublicPath;
     config.getFullUrl = getFullUrl;
 
     const commonObj = commonFun(env, argv, config);
@@ -43,4 +44,4 @@ module.exports = (env, argv) => {
     // const obj = commonObj;
     // console.log(obj)
     return obj;
-}
+};

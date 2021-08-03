@@ -8,7 +8,8 @@ type TTarget = {
     location: Location<unknown>;
     params: IOBJ;
     match: match<IOBJ>;
-    meta: IOBJ
+    meta: IOBJ;
+    query: IOBJ;
 };
 
 export type TBeforeEach = (next: TNext, target: TTarget) => void;
@@ -33,7 +34,7 @@ const RouteIntercept: FC<IRouteInterceptProps> = (props) => {
     // 初始化的锁
     const [lock, setLock] = useState(false);
     // const control = useRef<null | number>(null);
-    const {history, location, params, match} = useRouter();
+    const {history, location, params, match, query} = useRouter(meta);
     const parent: any = useContext(DataTakeAlong);
 
     const next: TNext = (path, type = 'push') => {
@@ -50,7 +51,7 @@ const RouteIntercept: FC<IRouteInterceptProps> = (props) => {
 
     const setAfterFun = () => {
         parent.afterEach = () => {
-            afterEach({location, params, match, meta});
+            afterEach({location, params, match, meta, query});
         };
     };
 
@@ -74,15 +75,11 @@ const RouteIntercept: FC<IRouteInterceptProps> = (props) => {
         } else if (lock && !noPage) {
             // console.log(1);
             setAfterFun();
-            beforeEach(next, {location, params, match, meta});
+            beforeEach(next, {location, params, match, meta, query});
         } else {
             setLock(true);
         }
     }, [lock, routerInfo]);
-
-    // useEffect(() => {
-    //     console.log({history, location, params, match});
-    // }, []);
 
     return (
         <>

@@ -1,10 +1,11 @@
 
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
 const {WebpackManifestPlugin} = require('webpack-manifest-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-
+const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv, config) => {
     const {
@@ -25,31 +26,21 @@ module.exports = (env, argv, config) => {
     return {
         plugins: [
             new CleanWebpackPlugin(),
-            new WebpackManifestPlugin(),
+            // new WebpackManifestPlugin(),
             // 开启 gzip
-            new CompressionWebpackPlugin(),
+            // new CompressionWebpackPlugin(),
         ],
         optimization: {
+            // https://blog.csdn.net/lin_fightin/article/details/115586812
+            usedExports: true,
             minimizer: [
-                new UglifyJsWebpackPlugin({
-                    // cache: true,   // 开启缓存
-                    // parallel: true, // 开启多线程编译
-                    // sourceMap: true,  // 是否sourceMap
-                    // uglifyOptions: {  // 丑化参数
-                    //     comments: false,
-                    //     warnings: false,
-                    //     compress: {
-                    //         unused: true,
-                    //         dead_code: true,
-                    //         collapse_vars: true,
-                    //         reduce_vars: true
-                    //     },
-                    //     output: {
-                    //         comments: false
-                    //     }
-                    // }
-                }),
-                new OptimizeCssAssetsWebpackPlugin(),
+                '...',
+                // webpack5 有默认丑化压缩
+                // https://webpack.docschina.org/plugins/terser-webpack-plugin/
+                // new TerserPlugin(),
+                // 这个不知道为啥会提示错误
+                // new OptimizeCssAssetsWebpackPlugin(),
+                new CssMinimizerWebpackPlugin(),
             ]
         }
     };

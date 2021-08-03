@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 
 module.exports = (env, argv, config) => {
     const {
@@ -24,6 +25,8 @@ module.exports = (env, argv, config) => {
             version: '1.0'
         },
         plugins: [
+            // 开启 hot时候，会自动添加
+            new webpack.HotModuleReplacementPlugin()
         ],
         optimization: {
             moduleIds: 'named',
@@ -38,6 +41,8 @@ module.exports = (env, argv, config) => {
             host: '0.0.0.0',
             useLocalIp: true,
             inline: true,
+            hot: true,
+            hotOnly: true,
             stats: 'errors-only',
             quiet: true
         },

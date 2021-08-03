@@ -1,10 +1,10 @@
 
 import {default as RouterView, setBeforeEach, setAfterEach} from './inbulk/RenderPage';
-export {useRouter} from './config';
+export {useRouter, getRouter} from './config';
 
 // 路由前
 setBeforeEach((next, target) => {
-    console.log('before');
+    // console.log('before');
     const isLoginUrl = target.match.path === '/login';
     const isLogin = window.localStorage.getItem('asd');
 
@@ -26,7 +26,7 @@ setBeforeEach((next, target) => {
 
 // 路由后
 setAfterEach((target) => {
-    console.log('after');
+    // console.log('after');
 });
 
 export {

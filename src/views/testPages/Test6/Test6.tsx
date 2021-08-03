@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {useRouter} from '@/router';
 import {testApi1} from '@/apis';
-import './index.less';
+import './index.scoped.less';
 
 const Test6: FC = (props) => {
     const router = useRouter();

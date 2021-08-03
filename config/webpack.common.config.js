@@ -1,3 +1,5 @@
+// webpack5 assetsModuleType https://blog.csdn.net/lin_fightin/article/details/115140736?utm_term=webpack5%E9%85%8D%E7%BD%AE%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90&utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~sobaiduweb~default-0-115140736&spm=3001.4430
+
 
 const webpack = require('webpack');
 // progress-bar-webpack-plugin
@@ -20,6 +22,7 @@ module.exports = (env, argv, config) => {
         pageTitle,
         assetsDir,
         setFileLocation,
+        setAssetsPublicPath,
         isDev,
         getFullUrl
     } = config;
@@ -36,7 +39,9 @@ module.exports = (env, argv, config) => {
         output: {
             path: getFullUrl('dist'),
             filename: setFileLocation('[name].[contenthash].js'),
+            chunkFilename: setFileLocation('[name].[contenthash].chunk.js'),
             publicPath,
+            // assetModuleFilename: setFileLocation('[name].[hash:7][ext]'),
         },
         module: {
             rules: [
@@ -49,6 +54,12 @@ module.exports = (env, argv, config) => {
                         {
                             loader: 'babel-loader',
                         },
+                        // {
+                        //     loader: 'html-loader',
+                        //     options: {
+                        //         esModule: false
+                        //     }
+                        // },
                         {
                             loader: 'eslint-loader',
                             options: {
@@ -64,7 +75,10 @@ module.exports = (env, argv, config) => {
                     use: [
                         {
                             loader: MiniCssExtractPlugin.loader,
-                            options: {}
+                            options: {
+                                publicPath: './',
+                                // hmr: isDev,
+                            }
                         },
                         {
                             loader: 'css-loader',
@@ -98,32 +112,64 @@ module.exports = (env, argv, config) => {
                 // 图片
                 {
                     test: /\.(png|svg|jpg|gif)$/,
-                    use: [
-                        {
-                            loader: 'url-loader',
-                            options: {
-                                // https://www.jianshu.com/p/c8d3b2a912c3
-                                // 由file-loader版本过高引发的兼容问题，esModule选项已在4.3.0版本的文件加载器中引入，而在5.0.0版本中，默认情况下已将其设置为true。
-                                esModule: false,
-                                // 超过 5kb的原图输出
-                                limit: 5120,
-                                name: setFileLocation('[name].[sha512:hash:base64:7].[ext]'),
-                            }
+                    type: 'asset',
+                    generator: {
+                        filename: setFileLocation('[name].[hash:7][ext]'),
+                        publicPath: setAssetsPublicPath(setFileLocation('[name].[hash:7][ext]'), publicPath)
+                    },
+                    parser: {
+                        dataUrlCondition: {
+                            // 超过 5kb的原图输出
+                            maxSize: 1024 * 5
                         }
-                    ]
+                    }
+                    // use: [
+                    //     {
+                    //         loader: 'url-loader',
+                    //         options: {
+                    //             // https://www.jianshu.com/p/c8d3b2a912c3
+                    //             // 由file-loader版本过高引发的兼容问题，esModule选项已在4.3.0版本的文件加载器中引入，而在5.0.0版本中，默认情况下已将其设置为true。
+                    //             esModule: false,
+                    //             // 超过 5kb的原图输出
+                    //             limit: 5120,
+                    //             name: setFileLocation('[name].[sha512:hash:base64:7].[ext]'),
+                    //         }
+                    //     },
+                    // ]
                 },
                 // 文字
                 {
                     test: /\.(woff|woff2|eot|ttf|otf)$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: setFileLocation('[name].[sha512:hash:base64:8].[ext]'),
-                            }
+                    type: 'asset',
+                    generator: {
+                        filename: setFileLocation('[name].[hash:8][ext]'),
+                        publicPath: setAssetsPublicPath(setFileLocation('[name].[hash:8][ext]'), publicPath)
+                    },
+                    parser: {
+                        dataUrlCondition: {
+                            // 超过 50kb的原图输出
+                            maxSize: 1024 * 50
                         }
-                    ]
+                    }
+                    // use: [
+                    //     {
+                    //         loader: 'file-loader',
+                    //         options: {
+                    //             name: setFileLocation('[name].[sha512:hash:base64:8].[ext]'),
+                    //         }
+                    //     }
+                    // ]
                 },
+                // {
+                //     test: /.html$/,
+                //     loader: 'html-loader',
+                //     options: {
+                //         esModule: false,
+                //         options: {
+                //             attrs: ['img:src', ':style']
+                //         }
+                //     }
+                // }
             ],
         },
         plugins: [
