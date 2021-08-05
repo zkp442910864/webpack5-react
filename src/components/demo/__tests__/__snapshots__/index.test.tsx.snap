@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`组件 Test 点击效果2 1`] = `
+<DocumentFragment>
+  <div
+    aria-label="test"
+    class="bbb2"
+  >
+    <div>
+      1231231233333
+    </div>
+    <div
+      class="qqq"
+    >
+      123132
+    </div>
+    <div>
+      ~~~~~~~~~~~~~~~~~~~~~~~
+    </div>
+  </div>
+</DocumentFragment>
+`;

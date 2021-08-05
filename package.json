@@ -1,7 +1,8 @@
 {
     "scripts": {
         "start": "webpack serve --env CUSTOM_NODE_ENV=development --mode=development --config config/index.js",
-        "build": "webpack build --env CUSTOM_NODE_ENV=production --mode=production --config config/index.js"
+        "build": "webpack build --env CUSTOM_NODE_ENV=production --mode=production --config config/index.js",
+        "jest": "jest --passWithNoTests"
     },
     "devDependencies": {
         "@babel/core": "^7.14.8",
@@ -11,6 +12,9 @@
         "@babel/preset-react": "^7.14.5",
         "@babel/preset-typescript": "^7.14.5",
         "@babel/runtime": "^7.14.8",
+        "@testing-library/jest-dom": "^5.14.1",
+        "@testing-library/react": "^12.0.0",
+        "@testing-library/react-hooks": "^7.0.1",
         "@types/react": "^17.0.15",
         "@types/react-dom": "^17.0.9",
         "@types/react-router": "^5.1.16",
@@ -34,6 +38,7 @@
         "friendly-errors-webpack-plugin": "^1.7.0",
         "html-loader": "^2.1.2",
         "html-webpack-plugin": "^5.3.2",
+        "jest": "^27.0.6",
         "less": "^4.1.1",
         "less-loader": "^10.0.1",
         "mini-css-extract-plugin": "^2.1.0",

@@ -225,7 +225,7 @@ module.exports = (env, argv, config) => {
             mergeDuplicateChunks: true,
         },
         resolve: {
-            extensions: ['.tsx', '.ts', '.js'],
+            extensions: ['.tsx', '.ts', '.js', '.json'],
             alias: {
                 '@': getFullUrl('src')
             }

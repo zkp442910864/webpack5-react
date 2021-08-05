@@ -18,6 +18,6 @@ module.exports = {
                 // 只对带有 scoped 名称的起作用
                 include: '.scoped.(sa|sc|le|c)ss$',
             }
-        ]
-    ]
+        ],
+    ],
 };
