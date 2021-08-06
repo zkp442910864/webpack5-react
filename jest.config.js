@@ -6,9 +6,9 @@ module.exports = {
         'src',
         'node_modules'
     ],
-    //测试用例目录
+    // 测试用例目录
     testRegex: '(/__tests__/.*.test)\\.[jt]sx?$',
-    //覆盖的文件类型
+    // 别名设置
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1'
     },
@@ -21,12 +21,4 @@ module.exports = {
             statements: 80
         }
     },
-    //忽略的目录
-    // coveragePathIgnorePatterns: [
-    //     '/node_modules/',
-    // ],
-    //测试覆盖文件
-    // collectCoverageFrom: [
-    //     '**/*.test.{ts,tsx}',
-    // ]
 };
