@@ -18,13 +18,6 @@ module.exports = (env, argv, config) => {
     } = config;
 
     return {
-        cache: {
-            type: 'filesystem',
-            buildDependencies: {
-                config: [__filename],
-            },
-            version: '1.0'
-        },
         plugins: [
             new FriendlyErrorsWebpackPlugin({
                 // 成功的时候输出

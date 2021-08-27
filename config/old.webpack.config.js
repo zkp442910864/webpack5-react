@@ -2,6 +2,7 @@
 
 // webpack5的变化 https://blog.csdn.net/weixin_41319237/article/details/115488032
 // 版本hash 解释 https://www.cnblogs.com/heyushuo/p/8543889.html
+// webpack5优化 https://juejin.cn/post/6996816316875161637
 
 const os = require('os');
 const path = require('path');
@@ -103,7 +104,10 @@ module.exports = (env, argv) => {
 
     return {
         devtool: isDev ? 'eval-source-map' : 'eval',
-        stats:{
+        cache: {
+            type: 'filesystem',
+        },
+        stats: {
             // colors: true,
             modules: false,
             // children: false,
@@ -125,6 +129,7 @@ module.exports = (env, argv) => {
             filename: setFileLocation('[name].[contenthash].js'),
             // chunkFilename: '[name].[contenthash].js',
             publicPath,
+            pathinfo: false
         },
         module: {
             rules: [
@@ -377,6 +382,7 @@ module.exports = (env, argv) => {
             quiet: true
         },
         resolve: {
+            symlinks: false,
             extensions: ['.tsx', '.ts', '.js'],
             alias: {
                 '@': getFullUrl('src')

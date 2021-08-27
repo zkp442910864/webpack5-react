@@ -15,7 +15,7 @@ const Test6: FC = (props) => {
     return (
         <div className="bbbbb" onClick={link}>
             Test-666
-            <img src={require('@/assets/img/bd.jpg')}/>
+            {/* <img src={require('@/assets/img/bd.jpg')}/> */}
         </div>
     );
 };

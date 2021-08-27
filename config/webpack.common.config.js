@@ -31,6 +31,14 @@ module.exports = (env, argv, config) => {
         // TODO: browserslist 会影响到热更新
         target: isDev ? 'web' : 'browserslist',
         devtool: isDev ? 'source-map' : 'eval',
+        // 缓存
+        cache: {
+            type: 'filesystem',
+            // buildDependencies: {
+            //     config: [__filename],
+            // },
+            // version: '1.0'
+        },
         stats: {
             modules: false,
         },
@@ -113,7 +121,22 @@ module.exports = (env, argv, config) => {
                     type: 'asset',
                     generator: {
                         filename: setFileLocation('[name].[hash:7][ext]'),
-                        publicPath: setAssetsPublicPath(setFileLocation('[name].[hash:7][ext]'), publicPath)
+                        // dataUrl: (context) => {
+                        //     console.log(context);
+                        //     return context;
+                        // },
+                        publicPath: (pathData, assetInfo) => {
+                            // console.log(pathData.runtime);
+                            // console.log(pathData.filename);
+                            /**
+                             * 针对 build
+                             * pathData.runtime 在样式文件中，返回的 child
+                             * 代码文件中，返回 main
+                             */
+                            return pathData.runtime === 'child'
+                                ? setAssetsPublicPath(setFileLocation('[name].[hash:7][ext]'), publicPath)
+                                : publicPath;
+                        }
                     },
                     parser: {
                         dataUrlCondition: {
@@ -206,6 +229,8 @@ module.exports = (env, argv, config) => {
             }),
         ],
         optimization: {
+            // 树摇
+            // sideEffects: true,
             splitChunks: {
                 cacheGroups: {
                     vendors: {
