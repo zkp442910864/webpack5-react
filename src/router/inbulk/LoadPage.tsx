@@ -28,36 +28,41 @@ const LoadPage: FC<ILoadPageProps> = (props) => {
     const [render, setRender] = useState<JSX.Element | null>(null);
     const parent: any = useContext(DataTakeAlong);
 
+    // 加载组件
+    const loadComponent = () => {
+        setLoad(true);
+        const Com = component as unknown as (props: any) => JSX.Element;
+        setRender(<Com {...other} children={children} />);
+        setLoad(false);
+    };
+
+    // 加载异步组件
+    const loadAsyncComponent = async () => {
+        setLoad(true);
+
+        try {
+            const res = await (component as TSyncComponent)();
+            const Com = res.default;
+            setRender(<Com {...other} children={children} />);
+            setLoad(false);
+        } catch (error) {
+            console.warn('异步组件加载失败, 1.可能是组件被当成异步组件加载了. 2.建议异步组件函数不要带参数,同步组件有个默认参数props');
+            console.warn(error);
+            loadComponent();
+        }
+
+    };
 
     useEffect(() => {
         /**
-         * TODO: 注意，这里的异步组件是通过判断函数名称来进行判断
+         * TODO: 注意，这里的异步组件是通过判断函数参数来进行判断
+         *
+         * 这个逻辑不靠谱，做个报错兼容
          */
-        if (typeof component === 'string' || component.name === 'component') {
-            (async () => {
-                setLoad(true);
-                // await (new Promise((rel) => {
-                //     setTimeout(() => {
-                //         rel();
-                //     }, 5000);
-                // }));
-
-                try {
-                    const res = await (component as TSyncComponent)();
-                    const Com = res.default;
-                    setRender(<Com {...other} children={children} />);
-                } catch (error) {
-                    console.error('异步组件加载失败', error);
-                    setLoad(false);
-                }
-                setLoad(false);
-            })();
-
+        if (typeof component === 'function' && !component.length) {
+            loadAsyncComponent();
         } else {
-            setLoad(true);
-            const Com = component as unknown as (props: any) => JSX.Element;
-            setRender(<Com {...other} children={children} />);
-            setLoad(false);
+            loadComponent();
         }
     }, []);
 
