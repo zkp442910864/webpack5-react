@@ -12,6 +12,7 @@ export interface IMapFunData {
      */
     asyncStatus?: 'load' | 'success' | 'fail';
 }
+
 export type TMap = {
     /**
      * 传入的 callback 不执行的话，会导致 Promise 一直处理在 pending状态
