@@ -30,7 +30,7 @@ module.exports = (env, argv, config) => {
         // https://www.jianshu.com/p/10f2479995a4
         // TODO: browserslist 会影响到热更新
         target: isDev ? 'web' : 'browserslist',
-        devtool: isDev ? 'source-map' : 'eval',
+        devtool: isDev ? 'source-map' : false,
         // 缓存
         cache: {
             type: 'filesystem',
