@@ -1,4 +1,4 @@
-
+import store from '@/store';
 import {default as RouterView, setBeforeEach, setAfterEach} from './inbulk/RenderPage';
 export {useRouter, getRouter} from './config';
 
@@ -8,16 +8,18 @@ setBeforeEach((next, target) => {
     const isLoginUrl = target.match.path === '/login';
     const isLogin = window.localStorage.getItem('asd');
 
+    // console.log(store.getState());
+
     switch (true) {
         // 未登录 未在登录页面
-        case !isLogin && !isLoginUrl:
-            // next();
-            next('/login', 'replace');
-            break;
+        // case !isLogin && !isLoginUrl:
+        //     // next();
+        //     next('/login', 'replace');
+        //     break;
         // 登录了 在登录页面
-        case isLogin && isLoginUrl:
-            next('/', 'replace');
-            break;
+        // case isLogin && isLoginUrl:
+        //     next('/', 'replace');
+        //     break;
         default:
             next();
             break;
@@ -26,7 +28,7 @@ setBeforeEach((next, target) => {
 
 // 路由后
 setAfterEach((target) => {
-    // console.log('after');
+    console.log('after', target);
 });
 
 export {

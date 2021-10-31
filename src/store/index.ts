@@ -10,16 +10,20 @@ import {getReducersModule, dispatchPackage} from './config';
 const reducer = combineReducers(getReducersModule());
 const store: Store<any, any> = createStore(reducer);
 
+// 任务触发器
+export const dispatch = (type: string, payload?: any) => dispatchPackage(dispatch, store.dispatch, store.getState(), store.getState, type, payload);
+
 // 获取 值和 触发函数
 export const useStoreModule = (fn: (state: any) => any) => {
-    const curStore = useStore();
+    // const curStore = useStore();
     const val = useSelector(fn);
-    const dispatch = useDispatch();
-    // 二次封装
-    const newDispatch = (type: string, payload?: any) => dispatchPackage(dispatch, curStore.getState(), type, payload);
+    // const dispatch = useDispatch();
 
-    return [val, newDispatch, dispatch] as [any, (type: string, payload?: any) => Promise<any>, Dispatch<any>];
+    // console.log(curStore.getState());
+    // 二次封装
+    // const newDispatch = (type: string, payload?: any) => dispatchPackage(newDispatch, dispatch, curStore.getState(), store.getState, type, payload);
+
+    return [val, dispatch, store.dispatch] as [any, (type: string, payload?: any) => Promise<any>, Dispatch<any>];
 };
 
-export const dispatch = (type: string, payload?: any) => dispatchPackage(store.dispatch, store.getState(), type, payload);
 export default store;

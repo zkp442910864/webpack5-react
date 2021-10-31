@@ -4,6 +4,8 @@ import {Provider} from 'react-redux';
 import store from '@/store';
 import {RouterView, getRouter} from '@/router';
 
+import '@/assets/style/common.less';
+
 export default () => {
     // 主入口
     const Main = () => {
@@ -13,7 +15,7 @@ export default () => {
             <Provider store={store}>
                 {/* 渲染路由页面 */}
                 <RouterView/>
-                <div id="funModules"></div>
+                {/* <div id="funModules"></div> */}
             </Provider>
         );
     };

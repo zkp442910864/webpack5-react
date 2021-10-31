@@ -12,21 +12,20 @@ const defaultData = {
 // {[key in keyof typeof defaultData]: any}
 // 处理函数
 const mapFn: TMap = {
-    'test/asdf': ({state, data, callback, allState, dispatch, asyncStatus, type}) => {
+    'test/asdf': ({getLastState, data, callback, allState, dispatch, asyncStatus, type}) => {
+        const state = getLastState();
         state.abc = data;
+        // debugger;
         callback();
     },
     'test/assss': (obj) => asyncAction(obj, 'ddd', (params) => {
-        const {state, data, callback, allState, dispatch, asyncStatus, type} = obj;
-        // console.log(params);
+        const {data, callback, getAllState, dispatch, asyncStatus, type} = obj;
 
         return new Promise((rel, rej) => {
             setTimeout(() => {
-                dispatch({
-                    type: 'test2/asdf2',
-                    payload: 'success',
-                });
-                rel('success');
+                // dispatch('test2/asdf2', 'success');
+                // console.log(getAllState());
+                rel('success' + data);
                 // rej('fail');
             }, 1000);
         });

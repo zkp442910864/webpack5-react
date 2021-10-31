@@ -7,13 +7,37 @@ const devFun = require('./webpack.dev.config');
 const proFun = require('./webpack.pro.config');
 
 const config = {
+    /**
+     * 文件中的路径方式，相对或绝对
+     */
     publicPath: './',
+    /**
+     * 输出的资源文件夹
+     */
     assetsDir: 'static',
+    /**
+     * 端口
+     */
     port: '3333',
+    /**
+     * 需要处理的文件
+     */
     include: [getFullUrl('src')],
+    /**
+     * 排除处理的文件
+     */
     exclude: [/node_modules/],
+    /**
+     * 启动服务的ip地址
+     */
     networkIp: getNetworkIp(),
+    /**
+     * 全局 less 参数
+     */
     globalLessData: getFullUrl('src/assets/style/params.less'),
+    /**
+     * 页面title
+     */
     pageTitle: 'react',
 };
 

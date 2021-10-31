@@ -8,8 +8,9 @@ const defaultData = {
 // {[key in keyof typeof defaultData]: any}
 // 处理函数
 const mapFn: TMap = {
-    'test2/asdf2': ({state, data, callback, allState}) => {
-        console.log(allState);
+    'test2/asdf2': ({getLastState, data, callback, allState}) => {
+        // console.log(allState);
+        const state = getLastState();
         state.abc = data;
         callback();
     }

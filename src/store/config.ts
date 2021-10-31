@@ -1,16 +1,50 @@
 
 // 触发函数传入的值
 export interface IMapFunData {
-    state: IOBJ;
+    /**
+     * 当前模块所对应的数据
+     */
+    // state: IOBJ;
+    /**
+     * 新数据
+     */
     data: any;
+    /**
+     * 触发任务后，进行回调，用来获取操作后的结果
+     */
     callback: (res?: any) => void;
+    /**
+     * 所有模块的数据
+     *
+     * TODO: 在异步状态的函数中，这个数据会存在，不是最新的情况
+     */
     allState: IOBJ;
-    dispatch: any;
+    /**
+     * 获取所有模块的数据
+     *
+     * TODO: 因为异步函数中，allState 存在不是最新的情况，所以可以在异步回调中使用该函数，获取最新的 allState
+     */
+    getAllState: () => IOBJ;
+    /**
+     * 触发任务
+     */
+    dispatch: (type: string, data: any) => Promise<any>;
+    /**
+     * 原触发任务
+     */
+    rawDispatch: (data: IMapFunData) => void;
+    /**
+     * 触发任务的类型
+     */
     type: string;
     /**
      * 异步接口产生的状态
      */
     asyncStatus?: 'load' | 'success' | 'fail';
+    /**
+     * 获取最新的 state
+     */
+    getLastState: () => IOBJ;
 }
 
 export type TMap = {
@@ -21,19 +55,8 @@ export type TMap = {
      *
      * 异步函数 createAsyncAction，这里面会自动执行
      */
-    [key: string]: (obj: IMapFunData & {dispatch: (o: {type: string, payload: any}) => void}) => void
+    [key: string]: (obj: IMapFunData) => void
 };
-
-// actions 接受到的值
-export interface TActionData {
-    type: string;
-    dispatch: any;
-    callback: (res?: any) => void;
-    payload?: any;
-    allState: IOBJ;
-    asyncStatus?: 'load' | 'success' | 'fail';
-}
-
 
 /**
  * 动态获取模块
@@ -66,18 +89,29 @@ export const getReducersModule = () => {
 /**
  * 二次封装 dispatch
  * @param dispatch 执行函数
+ * @param rawDispatch 原执行函数
  * @param allState 所有state
+ * @param getAllState 获取所有state
  * @param type 匹配类型
  * @param payload 参数
  * @returns Promise<{dispatchData, res}>
  */
-export const dispatchPackage = (dispatch: any, allState: IOBJ, type: string, payload?: any) => {
+export const dispatchPackage = (
+    dispatch: any,
+    rawDispatch: (data: Omit<IMapFunData, 'getLastState'>) => void,
+    allState: IOBJ,
+    getAllState: () => IOBJ,
+    type: string,
+    payload?: any
+) => {
     return new Promise((rel, rej) => {
-        dispatch({
+        rawDispatch({
             type,
-            payload,
+            data: payload,
             allState,
+            getAllState,
             dispatch,
+            rawDispatch,
             callback (res: any) {
                 // const dispatchData = {
                 //     type,
@@ -103,23 +137,27 @@ export const dispatchPackage = (dispatch: any, allState: IOBJ, type: string, pay
  * @returns (obj: IMapFunData) => void
  */
 export const asyncAction = (obj: IMapFunData, valKey: string, requestFun: (params: IOBJ) => Promise<any>) => {
-    const {state, callback, allState, dispatch, asyncStatus, type, data: params} = obj;
-    const value: IOBJ = state[valKey] = (state[valKey] instanceof Object) ? state[valKey] : {};
-    const change = (status: string) => {
-        // console.log({
-        //     type,
-        //     payload: params,
-        //     asyncStatus: status,
-        //     allState,
-        //     callback
-        // })
-        dispatch({
+    const {callback, allState, getAllState, dispatch, rawDispatch, asyncStatus, type, data: params, getLastState} = obj;
+    const state = getLastState();
+    const value: IOBJ = state[valKey] = typeof state[valKey] === 'object' ? state[valKey] : {};
+    // debugger;
+    // 异步状态变化
+    const change = (status: IMapFunData['asyncStatus']) => {
+        const lastState = getLastState();
+        lastState[valKey] = {...value};
+
+        // 原生的 dispatch
+        rawDispatch({
             type,
-            payload: params,
-            asyncStatus: status,
+            data: params,
             allState,
-            callback
-        } as TActionData);
+            getAllState,
+            dispatch,
+            rawDispatch,
+            callback,
+            asyncStatus: status,
+            getLastState,
+        });
     };
 
 
@@ -128,6 +166,9 @@ export const asyncAction = (obj: IMapFunData, valKey: string, requestFun: (param
     } else if (asyncStatus !== 'load') {
         value.load = true;
         value.fail = undefined;
+        value.success = undefined;
+
+        // TODO: 注意以下的操作，都是延时的，所以使用的state 都不是最新的
 
         // 这里不能在同一个任务里调用 dispatch，所以放到下一个任务了
         // setTimeout(() => {
@@ -161,36 +202,58 @@ export const asyncAction = (obj: IMapFunData, valKey: string, requestFun: (param
  * @returns 模块
  */
 export const createReducersModule = (namespace: string, defaultData: IOBJ, mapFn: TMap) => {
+
+    // 为了拿到最新的 state
+    let lastState: IOBJ = defaultData;
+    const getLastState = () => lastState;
+
     return {
         // 模块名称
         namespace,
         // 处理匹配
-        module: (state: IOBJ = defaultData, action: TActionData) => {
+        module: (state: IOBJ = defaultData, action: IMapFunData) => {
+            // 保证异步中 取到的state 都是同一个
+            lastState = Object.assign({}, state);
+            // debugger;
 
             try {
                 if (action.type && !~action.type.indexOf('@@redux')) {
                     // TODO: dispatch: type值定义为 模块名称/执行任务
                     // 符合的 模块才执行
                     if (!~action.type.indexOf(`${namespace}/`)) {
-                        return state;
+                        return lastState;
                     }
+
                     // debugger
-                    action.callback = typeof action.callback === 'function' ? action.callback : (() => {});
-                    mapFn[action.type] && mapFn[action.type]({
-                        state,
-                        type: action.type,
-                        dispatch: action.dispatch,
-                        data: action.payload,
-                        callback: action.callback,
-                        allState: action.allState,
-                        asyncStatus: action.asyncStatus,
-                    });
+                    if (mapFn[action.type]) {
+                        // TODO: 考虑加个防抖，直接默认执行，如果其它函数有执行，直接覆盖掉
+                        const cbFn = action.callback;
+                        action.callback = (...arg) => {
+                            if (typeof cbFn === 'function') {
+                                cbFn(...arg);
+                            }
+                        };
+                        mapFn[action.type]({
+                            // state: lastState,
+                            type: action.type,
+                            dispatch: action.dispatch,
+                            rawDispatch: action.rawDispatch,
+                            data: action.data,
+                            callback: action.callback,
+                            allState: action.allState,
+                            getAllState: action.getAllState,
+                            asyncStatus: action.asyncStatus,
+                            getLastState,
+                        });
+                        // action.callback();
+                    }
                 }
             } catch (error) {
                 console.error(error);
             }
 
-            return Object.assign({}, state);
+            // console.log(lastState);
+            return lastState;
         },
     };
 };
