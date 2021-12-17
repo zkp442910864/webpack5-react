@@ -23,7 +23,8 @@ module.exports = (env, argv, config) => {
         setFileLocation,
         setAssetsPublicPath,
         isDev,
-        getFullUrl
+        getFullUrl,
+        outputPath
     } = config;
 
     return {
@@ -44,7 +45,7 @@ module.exports = (env, argv, config) => {
         },
         entry: getFullUrl('src/main.ts'),
         output: {
-            path: getFullUrl('dist'),
+            path: getFullUrl(outputPath),
             filename: setFileLocation('[name].[contenthash].js'),
             chunkFilename: setFileLocation('[name].[contenthash].chunk.js'),
             publicPath,
@@ -198,7 +199,7 @@ module.exports = (env, argv, config) => {
                 patterns: [
                     {
                         from: getFullUrl('public'),
-                        to: getFullUrl('dist'),
+                        to: getFullUrl(outputPath),
                         noErrorOnMissing: true,
                         globOptions: {
                             ignore: [

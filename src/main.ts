@@ -3,6 +3,10 @@ import render from './App';
 
 render();
 
+window.onload = function onload () {
+    console.log(document.getElementById('versions'));
+};
+
 // https://www.webpackjs.com/api/hot-module-replacement/
 // https://zhuanlan.zhihu.com/p/30135527
 if (process.env.CUSTOM_NODE_ENV === 'development' && (module as any).hot) {

@@ -7,6 +7,7 @@ const devFun = require('./webpack.dev.config');
 const proFun = require('./webpack.pro.config');
 
 const config = {
+    outputPath: './dist-react',
     /**
      * 文件中的路径方式，相对或绝对
      */
