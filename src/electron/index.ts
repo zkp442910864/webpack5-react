@@ -1,8 +1,14 @@
-import {app, BrowserWindow} from 'electron';
+import {app, BrowserWindow, ipcMain, nativeTheme, Menu, MenuItem} from 'electron';
 import isDev from 'electron-is-dev';
 import {resolve} from 'path';
 import process from 'process';
 import path from 'path';
+
+const provideEvent = () => {
+    ipcMain.handle('test', () => {
+        return 12313;
+    });
+};
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -22,6 +28,7 @@ const createWindow = () => {
         win.loadFile(resolve(__dirname, '../dist-react/index.html'));
     }
 
+    provideEvent();
     return win;
 };
 
