@@ -38,6 +38,7 @@ const Home: FC = (props) => {
     return (
         <div className="bbb bbb2">
             包装层
+            <a href="https://www.baidu.com">百度</a>
             <Text />
             <pre>
                 {JSON.stringify(test, null, 4)}
