@@ -23,7 +23,7 @@ module.exports = (env, argv, config) => {
         setFileLocation,
         setAssetsPublicPath,
         isDev,
-        getFullUrl
+        getFullUrl,
     } = config;
 
     return {
@@ -72,9 +72,9 @@ module.exports = (env, argv, config) => {
                             loader: 'eslint-loader',
                             options: {
                                 cache: true,
-                                quiet: true
-                            }
-                        }
+                                quiet: true,
+                            },
+                        },
                     ],
                 },
                 // less cs
@@ -90,31 +90,31 @@ module.exports = (env, argv, config) => {
                         {
                             loader: 'css-loader',
                             options: {
-                                sourceMap
+                                sourceMap,
                             },
                         },
                         {
-                            loader: 'scoped-css-loader'
+                            loader: 'scoped-css-loader',
                         },
                         {
                             loader: 'postcss-loader',
                             options: {
-                                sourceMap
-                            }
+                                sourceMap,
+                            },
                         },
                         {
                             loader: 'less-loader',
                             options: {
-                                sourceMap
+                                sourceMap,
                             },
                         },
                         {
                             loader: 'style-resources-loader',
                             options: {
-                                patterns: globalLessData
-                            }
-                        }
-                    ]
+                                patterns: globalLessData,
+                            },
+                        },
+                    ],
                 },
                 // 图片
                 {
@@ -137,14 +137,14 @@ module.exports = (env, argv, config) => {
                             return pathData.runtime === 'child'
                                 ? setAssetsPublicPath(setFileLocation('[name].[hash:7][ext]'), publicPath)
                                 : publicPath;
-                        }
+                        },
                     },
                     parser: {
                         dataUrlCondition: {
                             // 超过 5kb的原图输出
-                            maxSize: 1024 * 5
-                        }
-                    }
+                            maxSize: 1024 * 5,
+                        },
+                    },
                     // use: [
                     //     {
                     //         loader: 'url-loader',
@@ -165,14 +165,14 @@ module.exports = (env, argv, config) => {
                     type: 'asset',
                     generator: {
                         filename: setFileLocation('[name].[hash:8][ext]'),
-                        publicPath: setAssetsPublicPath(setFileLocation('[name].[hash:8][ext]'), publicPath)
+                        publicPath: setAssetsPublicPath(setFileLocation('[name].[hash:8][ext]'), publicPath),
                     },
                     parser: {
                         dataUrlCondition: {
                             // 超过 50kb的原图输出
-                            maxSize: 1024 * 50
-                        }
-                    }
+                            maxSize: 1024 * 50,
+                        },
+                    },
                     // use: [
                     //     {
                     //         loader: 'file-loader',
@@ -204,10 +204,10 @@ module.exports = (env, argv, config) => {
                         globOptions: {
                             ignore: [
                                 '**/index.html',
-                            ]
-                        }
-                    }
-                ]
+                            ],
+                        },
+                    },
+                ],
             }),
             new MiniCssExtractPlugin({
                 filename: setFileLocation('[name].[contenthash].css'),
@@ -225,8 +225,8 @@ module.exports = (env, argv, config) => {
             }),
             new webpack.DefinePlugin({
                 'process.env': {
-                    CUSTOM_NODE_ENV: JSON.stringify(env.CUSTOM_NODE_ENV)
-                }
+                    CUSTOM_NODE_ENV: JSON.stringify(env.CUSTOM_NODE_ENV),
+                },
             }),
         ],
         optimization: {
@@ -239,9 +239,9 @@ module.exports = (env, argv, config) => {
                         test: /[\\/]node_modules[\\/]/,
                         chunks: 'all',
                         priority: -20,
-                        reuseExistingChunk: true
+                        reuseExistingChunk: true,
                     },
-                }
+                },
             },
             // 如果模块已经包含在所有父级模块中，告知 webpack 从 chunk 中检测出这些模块，或移除这些模块。
             removeAvailableModules: true,
@@ -253,8 +253,8 @@ module.exports = (env, argv, config) => {
         resolve: {
             extensions: ['.tsx', '.ts', '.js', '.json'],
             alias: {
-                '@': getFullUrl('src')
-            }
+                '@': getFullUrl('src'),
+            },
         },
     };
 };

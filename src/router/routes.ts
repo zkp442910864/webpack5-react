@@ -14,8 +14,8 @@ const routes = [
         component: () => import('@/views/login'),
         exact: true,
         meta: {
-            title: '登录页'
-        }
+            title: '登录页',
+        },
     },
     {
         path: '/',
@@ -31,7 +31,7 @@ const routes = [
             {path: '/test5/:id', exact: true, component: () => import('@/views/testPages/Test5')},
             {path: '/test6', exact: true, component: () => import('@/views/testPages/Test6/Test6')},
             {path: '*', exact: true, component: Page404},
-        ]
+        ],
     },
 ];
 

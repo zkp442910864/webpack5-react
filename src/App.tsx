@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import {Provider} from 'react-redux';
+
 import store from '@/store';
 import {RouterView, getRouter} from '@/router';
 
@@ -14,7 +15,7 @@ export default () => {
             // 仓库
             <Provider store={store}>
                 {/* 渲染路由页面 */}
-                <RouterView/>
+                <RouterView />
                 {/* <div id="funModules"></div> */}
             </Provider>
         );

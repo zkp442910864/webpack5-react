@@ -1,7 +1,9 @@
 import React, {FC, useEffect, useState} from 'react';
+
 // import {useHistory} from 'react-router';
 import Text from '@/components/demo/Test';
 import {useStoreModule} from '@/store';
+
 import './index.scoped.less';
 
 const Home: FC = (props) => {

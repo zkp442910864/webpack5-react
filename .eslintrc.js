@@ -1,3 +1,6 @@
+
+const reactRules = require('@zzzz-/eslint-config-test/src/rules/react');
+
 module.exports = {
     env: {
         browser: true,
@@ -5,44 +8,44 @@ module.exports = {
         node: true,
         commonjs: true,
         es6: true,
-        amd: true
+        amd: true,
     },
     extends: [
-        'eslint:recommended',
         'plugin:react/recommended',
-        'plugin:@typescript-eslint/recommended'
+        '@zzzz-/eslint-config-test',
     ],
-    parser: '@typescript-eslint/parser',
-    parserOptions: {
-        ecmaFeatures: {
-            jsx: true
-        },
-        ecmaVersion: 12,
-        sourceType: 'module'
-    },
     plugins: [
         'react',
-        '@typescript-eslint'
     ],
+    // parserOptions: {
+    //     project: './tsconfig.json',
+    // },
+    settings: {
+        // webpack: {
+        //     config: 'config/index.js',
+        // },
+        // 'import/resolver': {
+        //     // webpack: {
+        //     //     config: 'config/index.js',
+        //     // },
+        //     // alias: {
+        //     //     map: [
+        //     //         ['@', './src'],
+        //     //     ],
+        //     //     extensions: ['.ts', '.js', '.jsx', '.json'],
+        //     // },
+        //     // node: {
+        //     //     paths: ['.'],
+        //     //     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+        //     // },
+        // },
+    },
     rules: {
-        indent: ['error', 4, {SwitchCase: 1}],
-        'linebreak-style': ['off', 'unix'],
-        quotes: ['error', 'single'],
-        semi: ['error', 'always'],
-        'react/prop-types': ['off'],
-        '@typescript-eslint/explicit-module-boundary-types': [
-            'off',
-            {
-                // allowHigherOrderFunctions: false,
-                allowDirectConstAssertionInArrowFunctions: true
-            }
-        ],
-        '@typescript-eslint/no-empty-function': [
-            'warn',
-            {allow: ['arrowFunctions']}
-        ],
-        '@typescript-eslint/no-var-requires': ['off'],
-        'eol-last': ['error'],
-        'quote-props': ['error', 'as-needed']
-    }
+        ...reactRules,
+        'import/no-unresolved': [2, {
+            ignore: ['@/'],
+            caseSensitive: true,
+            caseSensitiveStrict: true,
+        }],
+    },
 };
