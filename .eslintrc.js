@@ -47,5 +47,6 @@ module.exports = {
             caseSensitive: true,
             caseSensitiveStrict: true,
         }],
+        indent: [0],
     },
 };

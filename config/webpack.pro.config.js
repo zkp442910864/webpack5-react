@@ -24,7 +24,7 @@ module.exports = (env, argv, config) => {
         assetsDir,
         setFileLocation,
         isDev,
-        getFullUrl
+        getFullUrl,
     } = config;
 
     return {
@@ -50,8 +50,8 @@ module.exports = (env, argv, config) => {
                 // 这个不知道为啥会提示错误
                 // new OptimizeCssAssetsWebpackPlugin(),
                 new CssMinimizerWebpackPlugin(),
-            ]
-        }
+            ],
+        },
     };
 };
 

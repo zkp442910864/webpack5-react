@@ -2,6 +2,7 @@
     "scripts": {
         "start": "webpack serve --env CUSTOM_NODE_ENV=development --mode=development --config config/index.js",
         "build": "webpack build --env CUSTOM_NODE_ENV=production --mode=production --config config/index.js",
+        "build:lib": "webpack build --env CUSTOM_NODE_ENV=production lib=umd --mode=production --config config/index.js",
         "jest": "jest --passWithNoTests"
     },
     "dependencies": {
@@ -41,8 +42,8 @@
         "copy-webpack-plugin": "^9.0.1",
         "css-loader": "^6.2.0",
         "css-minimizer-webpack-plugin": "^3.0.2",
-        "eslint": "8.7.0",
-        "eslint-loader": "^4.0.2",
+        "eslint": "8.10.0",
+        "eslint-webpack-plugin": "^3.1.1",
         "extract-loader": "^5.1.0",
         "file-loader": "^6.2.0",
         "friendly-errors-webpack-plugin": "^1.7.0",

@@ -58,5 +58,5 @@ module.exports = {
     getNetworkIp,
     setFileLocationInit,
     getFullUrl,
-    setAssetsPublicPath
+    setAssetsPublicPath,
 };

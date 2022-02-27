@@ -1,5 +1,7 @@
 import store from '@/store';
+
 import {default as RouterView, setBeforeEach, setAfterEach} from './inbulk/RenderPage';
+
 export {useRouter, getRouter} from './config';
 
 // 路由前
@@ -32,6 +34,6 @@ setAfterEach((target) => {
 });
 
 export {
-    RouterView
+    RouterView,
 };
 

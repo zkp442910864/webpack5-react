@@ -7,7 +7,7 @@ const WebpackBar = require('webpackbar');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = (env, argv, config) => {
     const {
@@ -26,7 +26,31 @@ module.exports = (env, argv, config) => {
         getFullUrl,
     } = config;
 
+    const isLib = env.lib === 'umd';
+
+    const entryAndOutput = isLib
+        ? {
+            entry: getFullUrl('src/umd.ts'),
+            output: {
+                path: getFullUrl('dist'),
+                libraryTarget: 'umd',
+                library: 'xLib',
+                filename: 'index.js',
+            },
+        }
+        : {
+            entry: getFullUrl('src/main.ts'),
+            output: {
+                path: getFullUrl('dist'),
+                filename: setFileLocation('[name].[contenthash].js'),
+                chunkFilename: setFileLocation('[name].[contenthash].chunk.js'),
+                publicPath,
+                // assetModuleFilename: setFileLocation('[name].[hash:7][ext]'),
+            },
+        };
+
     return {
+        ...entryAndOutput,
         // https://www.jianshu.com/p/10f2479995a4
         // TODO: browserslist 会影响到热更新
         target: isDev ? 'web' : 'browserslist',
@@ -42,14 +66,6 @@ module.exports = (env, argv, config) => {
         },
         stats: {
             modules: false,
-        },
-        entry: getFullUrl('src/main.ts'),
-        output: {
-            path: getFullUrl('dist'),
-            filename: setFileLocation('[name].[contenthash].js'),
-            chunkFilename: setFileLocation('[name].[contenthash].chunk.js'),
-            publicPath,
-            // assetModuleFilename: setFileLocation('[name].[hash:7][ext]'),
         },
         module: {
             rules: [
@@ -68,13 +84,13 @@ module.exports = (env, argv, config) => {
                         //         esModule: false
                         //     }
                         // },
-                        {
-                            loader: 'eslint-loader',
-                            options: {
-                                cache: true,
-                                quiet: true,
-                            },
-                        },
+                        // {
+                        //     loader: 'eslint-loader',
+                        //     options: {
+                        //         cache: true,
+                        //         quiet: true,
+                        //     },
+                        // },
                     ],
                 },
                 // less cs
@@ -227,6 +243,10 @@ module.exports = (env, argv, config) => {
                 'process.env': {
                     CUSTOM_NODE_ENV: JSON.stringify(env.CUSTOM_NODE_ENV),
                 },
+            }),
+            new ESLintPlugin({
+                cache: true,
+                quiet: true,
             }),
         ],
         optimization: {

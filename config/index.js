@@ -42,6 +42,7 @@ const config = {
 };
 
 module.exports = (env, argv) => {
+    // console.log(env);
 
     const isDev = argv.mode === 'development';
     const setFileLocation = (fileName) => {

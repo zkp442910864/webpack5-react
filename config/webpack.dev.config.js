@@ -14,7 +14,7 @@ module.exports = (env, argv, config) => {
         assetsDir,
         setFileLocation,
         isDev,
-        getFullUrl
+        getFullUrl,
     } = config;
 
     return {
@@ -29,7 +29,7 @@ module.exports = (env, argv, config) => {
                 clearConsole: true,
             }),
             // 开启 hot时候，会自动添加
-            new webpack.HotModuleReplacementPlugin()
+            new webpack.HotModuleReplacementPlugin(),
         ],
         optimization: {
             moduleIds: 'named',
@@ -47,7 +47,7 @@ module.exports = (env, argv, config) => {
             hot: true,
             hotOnly: true,
             stats: 'errors-only',
-            quiet: true
+            quiet: true,
         },
     };
 };
