@@ -6,7 +6,7 @@ const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plug
 const {WebpackManifestPlugin} = require('webpack-manifest-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
 
 // css 树摇
 const PurgeCSSPlugin = require('purgecss-webpack-plugin');
