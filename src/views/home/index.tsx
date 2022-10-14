@@ -1,4 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
+import {AsyncSelect} from '@zzzz-/react-antd-extends';
+import 'antd/dist/antd.css';
 
 // import {useHistory} from 'react-router';
 import Text from '@/components/demo/Test';
@@ -20,7 +22,7 @@ const Home: FC = (props) => {
             // dispatch('test/asdf', 2);
             // console.log(123);
             const a = await dispatch('test/assss', 1);
-            console.log(a);
+            // console.log(a);
             // await dispatch('test/assss', 2);
             // await dispatch('test/assss', 3);
         })();
@@ -41,6 +43,7 @@ const Home: FC = (props) => {
         <div className="bbb bbb2">
             包装层
             <Text />
+            <AsyncSelect />
             <pre>
                 {JSON.stringify(test, null, 4)}
                 {/* {JSON.stringify(test.test.ddd)} */}

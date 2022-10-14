@@ -7,6 +7,7 @@ const {WebpackManifestPlugin} = require('webpack-manifest-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 // const TerserPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // css 树摇
 const PurgeCSSPlugin = require('purgecss-webpack-plugin');
@@ -30,6 +31,7 @@ module.exports = (env, argv, config) => {
     return {
         plugins: [
             new CleanWebpackPlugin(),
+            new BundleAnalyzerPlugin(),
             // new WebpackManifestPlugin(),
             // 开启 gzip
             // new CompressionWebpackPlugin(),
@@ -42,6 +44,7 @@ module.exports = (env, argv, config) => {
         optimization: {
             // https://blog.csdn.net/lin_fightin/article/details/115586812
             usedExports: true,
+            sideEffects: true,
             minimizer: [
                 '...',
                 // webpack5 有默认丑化压缩
