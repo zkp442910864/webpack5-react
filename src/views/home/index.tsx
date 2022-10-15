@@ -1,5 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
-import {AsyncSelect} from '@zzzz-/react-antd-extends';
+// import AsyncSelect from '@zzzz-/react-antd-extends/es/components/Test';
+// import AsyncSelect from '@zzzz-/react-antd-extends/es/components/MyModal';
+// import AsyncSelect from '@zzzz-/react-antd-extends/es/components/MyQueryForm/modules/AsyncSelect';
+import {Exhibit, AsyncSelect} from '@zzzz-/react-antd-extends';
+// import {AsyncSelect} from '@zzzz-/react-antd-extends/dist/index.js';
+// import {Select} from 'antd';
 import 'antd/dist/antd.css';
 
 // import {useHistory} from 'react-router';
@@ -43,7 +48,11 @@ const Home: FC = (props) => {
         <div className="bbb bbb2">
             包装层
             <Text />
+            {/* <Select /> */}
             <AsyncSelect />
+            <Exhibit rIf={true}>
+                123
+            </Exhibit>
             <pre>
                 {JSON.stringify(test, null, 4)}
                 {/* {JSON.stringify(test.test.ddd)} */}

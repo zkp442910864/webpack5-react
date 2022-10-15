@@ -16,7 +16,7 @@ specifiers:
   '@types/react-router': ^5.1.16
   '@types/react-router-dom': ^5.1.8
   '@zzzz-/eslint-config-test': ^1.0.20
-  '@zzzz-/react-antd-extends': ^0.0.84
+  '@zzzz-/react-antd-extends': 0.0.91
   '@zzzz-/stylelint-config-test': ^1.0.9
   antd: ^4.23.5
   autoprefixer: ^10.3.1
@@ -72,7 +72,7 @@ specifiers:
   webpackbar: ^5.0.0-3
 
 dependencies:
-  '@zzzz-/react-antd-extends': 0.0.84
+  '@zzzz-/react-antd-extends': 0.0.91_vsiyxxexfgyefb7cso4clhegk4
   antd: 4.23.5_sfoxds7t5ydpegc3knd667wn6m
   axios: 0.21.1
   history: 5.3.0
@@ -126,7 +126,7 @@ devDependencies:
   postcss: 8.3.6
   postcss-loader: 6.1.1_xhwjzzizphl5crvfbbngjgdvim
   postcss-preset-env: 6.7.0
-  purgecss-webpack-plugin: 4.0.3_webpack-cli@4.7.2
+  purgecss-webpack-plugin: 4.0.3_webpack@5.33.2
   scoped-css-loader: 1.0.0_sfoxds7t5ydpegc3knd667wn6m
   style-loader: 3.2.1_webpack@5.33.2
   style-resources-loader: 1.4.1_webpack@5.33.2
@@ -2477,8 +2477,12 @@ packages:
       - supports-color
     dev: true
 
-  /@zzzz-/react-antd-extends/0.0.84:
-    resolution: {integrity: sha512-O6dGC77GBTx11AVd8zGx+PBNh3oEy2c9Y0e4jh/uTZv5GjpTliBrK/AbW/fcBcnQ6rjOq7vmAe0EKeNoPtj+6w==}
+  /@zzzz-/react-antd-extends/0.0.91_vsiyxxexfgyefb7cso4clhegk4:
+    resolution: {integrity: sha512-9Tbs7ax/IC4cDFyIlkp6BFumzlEka6hwLbGREJXVQQsu75qDs//vWWw9Y8oqAwj+wXzIp3adkvoDxcdKwWCaDw==}
+    peerDependencies:
+      antd: '>=3.0.0 || >=4.0.0'
+      react: '>=16.0.0 || >=17.0.0'
+      react-dom: '>=16.0.0 || >=17.0.0'
     dependencies:
       antd: 4.23.5_sfoxds7t5ydpegc3knd667wn6m
       axios: 0.21.1
@@ -9736,17 +9740,14 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /purgecss-webpack-plugin/4.0.3_webpack-cli@4.7.2:
+  /purgecss-webpack-plugin/4.0.3_webpack@5.33.2:
     resolution: {integrity: sha512-YqmHRuKqjPhB+f/kURHYwlUR2QDcS8NSpCWrgQNICsSd8S2+tj40SDBav5b8KaSPQ8b/uXqrJxa/SnLyHK4BvQ==}
+    peerDependencies:
+      webpack: '*'
     dependencies:
       purgecss: 4.0.3
       webpack: 5.33.2_webpack-cli@4.7.2
       webpack-sources: 2.3.1
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-      - webpack-cli
     dev: true
 
   /purgecss/4.0.3:

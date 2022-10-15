@@ -5,12 +5,8 @@
         "build:lib": "webpack build --env CUSTOM_NODE_ENV=production lib=umd --mode=production --config config/index.js",
         "jest": "jest --passWithNoTests"
     },
-    "sideEffects": [
-        "*.css",
-        "*.less"
-    ],
     "dependencies": {
-        "@zzzz-/react-antd-extends": "^0.0.84",
+        "@zzzz-/react-antd-extends": "0.0.91",
         "antd": "^4.23.5",
         "axios": "^0.21.1",
         "history": "^5.3.0",

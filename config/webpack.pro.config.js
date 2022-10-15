@@ -43,8 +43,13 @@ module.exports = (env, argv, config) => {
         ],
         optimization: {
             // https://blog.csdn.net/lin_fightin/article/details/115586812
-            usedExports: true,
-            sideEffects: true,
+            // https://webpack.docschina.org/configuration/optimization/#optimizationinnergraph
+            // usedExports: true,
+            // sideEffects: true,
+            // innerGraph: true,
+
+            // 设置false，使 webpack-bundle-analyzer 能查看 具体分布
+            // providedExports: false,
             minimizer: [
                 '...',
                 // webpack5 有默认丑化压缩
