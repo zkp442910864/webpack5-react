@@ -31,7 +31,7 @@ module.exports = (env, argv, config) => {
     return {
         plugins: [
             new CleanWebpackPlugin(),
-            new BundleAnalyzerPlugin(),
+            // new BundleAnalyzerPlugin(),
             // new WebpackManifestPlugin(),
             // 开启 gzip
             // new CompressionWebpackPlugin(),

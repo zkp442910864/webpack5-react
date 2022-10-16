@@ -47,6 +47,11 @@ module.exports = (env, argv, config) => {
                 publicPath,
                 // assetModuleFilename: setFileLocation('[name].[hash:7][ext]'),
             },
+            // externals: {
+            //     react: 'react',
+            //     'react-dom': 'reactDOM',
+            //     antd: 'antd',
+            // },
         };
 
     return {
